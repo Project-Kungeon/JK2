@@ -13,5 +13,7 @@ UCLASS()
 class JK2_API AJK2GameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+	AJK2GameModeBase();
+
 };
