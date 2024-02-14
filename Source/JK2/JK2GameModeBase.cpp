@@ -6,7 +6,7 @@
 AJK2GameModeBase::AJK2GameModeBase()
 {
 	//Set DefaultPawnClass
-	static ConstructorHelpers::FClassFinder<APawn> DefaultPawnClassRef(TEXT("Blueprint'/Game/Character/PC/BP_JK2PlayerCharacter.BP_JK2PlayerCharacter_C'"));
+	static ConstructorHelpers::FClassFinder<APawn> DefaultPawnClassRef(TEXT("Blueprint'/Game/Character/PC/B_JK2PlayerCharacter.B_JK2PlayerCharacter_C'"));
 	if (nullptr != DefaultPawnClassRef.Class)
 	{
 		DefaultPawnClass = DefaultPawnClassRef.Class;
