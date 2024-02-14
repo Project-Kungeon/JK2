@@ -19,7 +19,7 @@ public:
 	FPrimaryAssetId MapID;
 
 	/** The gameplay experience to load */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Experience, meta = (AllowedTypes = "LyraExperienceDefinition"))
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Experience, meta = (AllowedTypes = "JK2ExperienceDefinition"))
 	FPrimaryAssetId ExperienceID;
 
 
