@@ -37,17 +37,28 @@ protected:
 	//InputMappingContext
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
+
 	//JumpAction
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> JumpAction;
+
 	//MoveAction
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> MoveAction;
+
 	//LookAction
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> LookAction;
+
 	//Move&Look Function
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+
+public:
+	UPROPERTY(BlueprintReadWrite)
+	bool bWeaponActive;
+
+	UPROPERTY()
+	TSet<AActor*> WeaponAttackTargets;
 
 };

@@ -46,6 +46,7 @@ SourceArt/**/*.png
 SourceArt/**/*.tga
 Content/Characters
 Content/Weapons
+Content/ParagonKallari
 
 # Binary Files
 Binaries/*
