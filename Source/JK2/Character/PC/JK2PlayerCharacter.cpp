@@ -6,7 +6,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SphereComponent.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -47,8 +46,8 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 
 	//Mesh
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f,0.0f,-100.0f),FRotator(0.0f, -90.0f, 0.0f));
-	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f,0.0f,-88.0f),FRotator(0.0f, -90.0f, 0.0f));
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);	// ?
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
 	//InputMappingContext & InputAction
@@ -72,6 +71,12 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 	{
 		LookAction = InputActionLookRef.Object;
 	}
+
+	/**	고민해봐야 할 것
+	*	입력과 이동을 character에 구현할 것인가?
+	*	playercontroller의 기능에 더 가까운 것이 아닐까?
+	*	그렇게 구현하면 스킬 구현은?
+	*/
 
 }
 
@@ -104,8 +109,8 @@ void AJK2PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::Jump);
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);	
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::Look);
 
