@@ -27,6 +27,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Skill Function
+	virtual void SkillQ(const FInputActionValue& value) override;
+
 public:
 	UFUNCTION()
 	void CheckWeaponTrace();

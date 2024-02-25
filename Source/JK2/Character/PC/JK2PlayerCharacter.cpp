@@ -9,6 +9,7 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Animation/AnimMontage.h"
 
 // Sets default values
 AJK2PlayerCharacter::AJK2PlayerCharacter()
@@ -71,13 +72,17 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 	{
 		LookAction = InputActionLookRef.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionSkillQRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Skill_Q.IA_Skill_Q'"));
+	if ( nullptr != InputActionSkillQRef.Object )
+	{
+		QAction = InputActionSkillQRef.Object;
+	}
 
 	/**	고민해봐야 할 것
 	*	입력과 이동을 character에 구현할 것인가?
 	*	playercontroller의 기능에 더 가까운 것이 아닐까?
 	*	그렇게 구현하면 스킬 구현은?
 	*/
-
 }
 
 // Called when the game starts or when spawned
@@ -113,6 +118,7 @@ void AJK2PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::Look);
+	EnhancedInputComponent->BindAction(QAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::SkillQ);
 
 }
 
@@ -137,5 +143,11 @@ void AJK2PlayerCharacter::Look(const FInputActionValue& Value)
 
 	AddControllerYawInput(-LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
+}
+
+//JJH Assignment
+void AJK2PlayerCharacter::SkillQ(const FInputActionValue& value)
+{
+	UE_LOG(LogTemp, Log, TEXT("This is Parent Class"));
 }
 

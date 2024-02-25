@@ -27,6 +27,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Skill Function
+	virtual void SkillQ(const FInputActionValue& value);
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	TObjectPtr<class USpringArmComponent> CameraBoom;
@@ -50,9 +53,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> LookAction;
 
+	//SkillQAction
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> QAction;
+
 	//Move&Look Function
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+
+	//Skill Function
 
 public:
 	UPROPERTY(BlueprintReadWrite)

@@ -31,6 +31,12 @@ void AJK2Assassin::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+//JJH Assignment
+void AJK2Assassin::SkillQ(const FInputActionValue& value)
+{
+	Super::SkillQ(value);
+	UE_LOG(LogTemp, Log, TEXT("This is %s"), *this->GetName());
+}
 
 void AJK2Assassin::CheckWeaponTrace()
 {
@@ -58,7 +64,7 @@ void AJK2Assassin::CheckWeaponTrace()
 		FLinearColor::Red,
 		FLinearColor::Green,
 		1.f);
-	
+
 	bool bSuccessR = UKismetSystemLibrary::SphereTraceMulti(
 		this,
 		StartR,
@@ -74,7 +80,7 @@ void AJK2Assassin::CheckWeaponTrace()
 		FLinearColor::Green,
 		1.f);
 
-	if ( bSuccessL|| bSuccessR )
+	if ( bSuccessL || bSuccessR )
 	{
 		// FDamageEvent DamageEvent;
 
@@ -90,7 +96,7 @@ void AJK2Assassin::CheckWeaponTrace()
 
 				// TODO HitDamage
 				UE_LOG(LogTemp, Log, TEXT("HitDamage"));
-				
+
 			}
 		}
 	}
