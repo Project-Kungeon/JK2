@@ -124,10 +124,6 @@ void AJK2Warrior::ComboActionBegin()
 		SaveAttacking = false;
 		DoCombo();
 	}
-	if ( CurrentCombo == 4 )
-	{
-		ComboActionEnd();
-	}
 }
 
 void AJK2Warrior::DoCombo()
@@ -136,25 +132,22 @@ void AJK2Warrior::DoCombo()
 	{
 	case 0:
 		CurrentCombo = 1;
-		PlayAnimMontage(ComboActionMontage1);
+		PlayAnimMontage(ComboActionMontage1,1.4f);
 		break;
 	case 1:
 		CurrentCombo = 2;
-		PlayAnimMontage(ComboActionMontage2);
+		PlayAnimMontage(ComboActionMontage2, 1.4f);
 		break;
 	case 2:
 		CurrentCombo = 3;
-		PlayAnimMontage(ComboActionMontage3);
-		break;
-	case 3:
-		CurrentCombo = 4;
+		PlayAnimMontage(ComboActionMontage3, 1.4f);
 		break;
 	}
 }
 
 void AJK2Warrior::ComboActionEnd()
 {
-	//ensure(CurrentCombo != 0);
+	ensure(CurrentCombo != 0);
 	CurrentCombo = 0;
 	SaveAttacking = false;
 	IsAttacking = false;
