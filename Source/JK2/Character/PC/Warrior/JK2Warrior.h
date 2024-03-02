@@ -18,11 +18,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	//AttackAction
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> AttackAction;
-
-	//Montage
+	//Montage, 클래스들은 각자 기본공격 몽타주 갯수가 다르다.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	TObjectPtr<class UAnimMontage> ComboActionMontage1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
@@ -31,20 +27,14 @@ protected:
 	TObjectPtr<class UAnimMontage> ComboActionMontage3;
 
 	//Attack Funciton
-	void Attack();
+	virtual void Attack() override;
 
 	//ComboAction
-	UFUNCTION(BlueprintCallable)
-	void ComboActionBegin();
-	UFUNCTION(BlueprintCallable)
-	void DoCombo();
-	UFUNCTION(BlueprintCallable)
-	void ComboActionEnd();
+	virtual void ComboActionBegin() override;
+	virtual void DoCombo() override;
+	virtual void ComboActionEnd() override;
 
-	//combo == 0 not start combo>=1->Combo Start
-	int32 CurrentCombo = 0;
-	uint8 IsAttacking : 1;
-	uint8 SaveAttacking : 1;
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

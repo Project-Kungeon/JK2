@@ -4,11 +4,6 @@
 #include "JK2Warrior.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
-//아래 세 헤더파일은 리팩토링해야하는 기능을 구현하기 위해 위해 추가
-//PlayerCharacter로 기능 일부를 옮기면 제거 할 것.
-#include "GameFramework/CharacterMovementComponent.h"
-#include "InputMappingContext.h"
-#include "EnhancedInputComponent.h"
 
 
 
@@ -19,14 +14,6 @@ AJK2Warrior::AJK2Warrior()
 	{
 		Super::GetMesh()->SetSkeletalMesh(DefaultMesh.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionAttackRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Attack.IA_Attack'"));
-	if ( nullptr != InputActionAttackRef.Object )
-	{
-		AttackAction = InputActionAttackRef.Object;
-	}
-	IsAttacking = false;
-	SaveAttacking = false;
-
 }
 
 void AJK2Warrior::BeginPlay()
@@ -43,10 +30,7 @@ void AJK2Warrior::Tick(float DeltaTime)
 
 void AJK2Warrior::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
-	EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AJK2Warrior::Attack);
+	Super::SetupPlayerInputComponent(PlayerInputComponent);	
 }
 //JJH Assignment
 void AJK2Warrior::SkillQ(const FInputActionValue& value)
@@ -105,29 +89,18 @@ void AJK2Warrior::CheckWeaponTrace()
 
 void AJK2Warrior::Attack()
 {
-	if ( IsAttacking )
-	{
-		SaveAttacking = true;
-	}
-	else
-	{
-		IsAttacking = true;
-		DoCombo();
-	}
+	Super::Attack();
 }
 
 void AJK2Warrior::ComboActionBegin()
 {
-	
-	if ( SaveAttacking )
-	{
-		SaveAttacking = false;
-		DoCombo();
-	}
+	Super::ComboActionBegin();
 }
 
 void AJK2Warrior::DoCombo()
 {
+	Super::DoCombo();
+
 	switch ( CurrentCombo )
 	{
 	case 0:
@@ -147,10 +120,7 @@ void AJK2Warrior::DoCombo()
 
 void AJK2Warrior::ComboActionEnd()
 {
-	ensure(CurrentCombo != 0);
-	CurrentCombo = 0;
-	SaveAttacking = false;
-	IsAttacking = false;
+	Super::ComboActionEnd();
 }
 
 

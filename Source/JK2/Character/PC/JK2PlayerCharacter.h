@@ -27,8 +27,26 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Move and Look Function
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
+	//Attack Function
+	virtual void Attack();
 	//Skill Function
-	virtual void SkillQ(const FInputActionValue& value);
+	virtual void SkillQ(const FInputActionValue& Value);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void ComboActionBegin();
+	UFUNCTION(BlueprintCallable)
+	virtual void DoCombo();
+	UFUNCTION(BlueprintCallable)
+	virtual void ComboActionEnd();
+
+	//combo == 0 not start combo>=1->Combo Start
+	int32 CurrentCombo = 0;
+	uint8 IsAttacking : 1;
+	uint8 SaveAttacking : 1;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
@@ -37,29 +55,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	TObjectPtr<class UCameraComponent> FollowCamera;
 
-	//InputMappingContext
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
-
-	//JumpAction
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> JumpAction;
-
-	//MoveAction
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> MoveAction;
-
-	//LookAction
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> LookAction;
-
-	//SkillQAction
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> QAction;
-
 	//Move&Look Function
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
 
 	//Skill Function
 

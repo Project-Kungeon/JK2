@@ -31,6 +31,43 @@ void AJK2Assassin::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+
+void AJK2Assassin::Attack()
+{
+	Super::Attack();
+}
+
+void AJK2Assassin::ComboActionBegin()
+{
+	Super::ComboActionBegin();
+}
+
+void AJK2Assassin::DoCombo()
+{
+	Super::DoCombo();
+	switch ( CurrentCombo )
+	{
+	case 0:
+		CurrentCombo = 1;
+		PlayAnimMontage(ComboActionMontage1, 1.f);
+		break;
+	case 1:
+		CurrentCombo = 2;
+		PlayAnimMontage(ComboActionMontage2, 1.f);
+		break;
+	case 2:
+		CurrentCombo = 3;
+		PlayAnimMontage(ComboActionMontage3, 1.f);
+		break;
+	}
+}
+
+void AJK2Assassin::ComboActionEnd()
+{
+	Super::ComboActionEnd();
+}
+
+
 //JJH Assignment
 void AJK2Assassin::SkillQ(const FInputActionValue& value)
 {
