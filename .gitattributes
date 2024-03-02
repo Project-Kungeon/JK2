@@ -1,0 +1,2 @@
+/Source/ThirdParty/BoostAsio/* filter=lfs diff=lfs merge=lfs -text
+/Source/ThirdParty/ProtobufCore/* filter=lfs diff=lfs merge=lfs -text
