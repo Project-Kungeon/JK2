@@ -2,6 +2,7 @@
 
 
 #include "JK2PlayerCharacter.h"
+#include "JK2.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -93,7 +94,8 @@ void AJK2PlayerCharacter::Tick(float DeltaTime)
 			info->set_state(GetMoveState());
 		}
 		// TODO : Send Packet should be needed
-		
+		// Will Test...
+		SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
 	}
 }
 

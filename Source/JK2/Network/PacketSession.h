@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NetworkWorker.h"
 #include "JK2.h"
 
 /**
@@ -17,10 +16,7 @@ public:
 		memset(_recvBuffer, 0, RecvBufferSize);
 	}
 
-	PacketSession(TSharedPtr<asio::io_context> io_context) : _socket(*io_context.Get())
-	{
-		memset(_recvBuffer, 0, RecvBufferSize);
-	}
+	PacketSession(TSharedPtr<asio::io_context> io_context);
 
 	~PacketSession()
 	{
@@ -32,9 +28,16 @@ public:
 
 	void Connect(std::string host, int port);
 
-	void AsyncWrite(asio::mutable_buffer& buffer);
+	
+	void SendPacket(asio::mutable_buffer& buffer)
+	{
+		AsyncWrite(buffer);
+	}
 
 private:
+	// 비동기 쓰기 호출
+	void AsyncWrite(asio::mutable_buffer& buffer);
+
 	// 접속 컨텐츠 코드
 	void OnConnect(const boost::system::error_code& err);
 

@@ -1,29 +1,19 @@
 #pragma once
-#include "../Network/Message.pb.h"
-#include "../JK2.h"
-#include "./lobby/LobbyPacketHandler.h"
-#include "./room/RoomPacketHandler.h"
+#include "LobbyPacketHandler.h"
+#include "JK2.h"
+#include "Message.pb.h"
+
 
 // 전역 패킷 핸들러 선언
 using PacketHandlerFunc = std::function<bool(PacketSessionRef&, asio::mutable_buffer&, int&)>;
 extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
-
 
 bool Handle_INVALID(PacketSessionRef& session, asio::mutable_buffer& buffer, int& offset);
 
 class ClientPacketHandler
 {
 public:
-	static void Init()
-	{
-		for ( int i = 0; i < UINT16_MAX; i++ )
-			GPacketHandler[i] = Handle_INVALID;
-		GPacketHandler[message::HEADER::LOGIN_RES] = [](PacketSessionRef& session, asio::mutable_buffer& buffer, int& offset)
-		{
-			return HandlePacket<message::S_Login>(LobbyPacketHandler::Handle_S_Login, session, buffer, offset);
-		};
-
-	}
+	static void Init();
 
 	static bool HandlePacket(PacketSessionRef& session, char* ptr, size_t size)
 	{

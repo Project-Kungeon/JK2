@@ -18,8 +18,14 @@ class JK2_API UJK2GameInstance : public UGameInstance
 	
 public:
 	virtual void Init() override;
+	
+	UFUNCTION(BlueprintCallable)
 	void ConnectToGameServer();
+
+	UFUNCTION(BlueprintCallable)
 	void DisconnectFromGameServer();
+
+	void SendPacket(asio::mutable_buffer& buffer);
 
 
 private:

@@ -1,7 +1,18 @@
 // Copyright 2024 All Rights Reserved by J&K
 
 
-#include "Network/PacketSession.h"
+#include "PacketSession.h"
+#include "NetworkWorker.h"
+#include "LobbyPacketHandler.h"
+#include "RoomPacketHandler.h"
+#include "ClientPacketHandler.h"
+
+PacketSession::PacketSession(TSharedPtr<asio::io_context> io_context)
+	: _socket(*io_context.Get())
+{
+	ClientPacketHandler::Init();
+	memset(_recvBuffer, 0, RecvBufferSize);
+}
 
 void PacketSession::Run(TSharedPtr<asio::io_context> io_context)
 {
@@ -40,7 +51,9 @@ void PacketSession::OnConnect(const boost::system::error_code& err)
 	if (!err)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success")));
-		MakeLoginReq(1000);
+		//MakeLoginReq(1000);
+
+
 	}
 	else
 	{

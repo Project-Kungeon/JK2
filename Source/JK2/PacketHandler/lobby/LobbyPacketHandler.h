@@ -1,5 +1,5 @@
 #pragma once
-#include "../../JK2.h"
+#include "JK2.h"
 
 class LobbyPacketHandler
 {

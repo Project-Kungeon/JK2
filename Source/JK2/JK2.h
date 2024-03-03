@@ -18,6 +18,17 @@ using boost::asio::ip::tcp;
 #define USING_SHARED_PTR(name)	using name##Ref = TSharedPtr<class name>;
 USING_SHARED_PTR(PacketSession);
 
-#include "./PacketHandler/ClientPacketHandler.h"
+#include "LobbyPacketHandler.h"
+#include "RoomPacketHandler.h"
+#include "ClientPacketHandler.h"
+
+#include "JK2GameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+
+#define SEND_PACKET(headerCode, pkt)															\
+	const size_t requiredSize = PacketUtil::RequiredSize(pkt);									\
+	char* rawBuffer = new char[requiredSize];													\
+	auto sendBuffer = asio::buffer(rawBuffer, requiredSize);									\
+	PacketUtil::Serialize(sendBuffer, headerCode, pkt);											\
+	Cast<UJK2GameInstance>(GWorld->GetGameInstance())->SendPacket(sendBuffer);
