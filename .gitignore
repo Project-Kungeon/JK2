@@ -47,6 +47,8 @@ SourceArt/**/*.tga
 Content/Characters
 Content/Weapons
 Content/ParagonKallari
+Content/ParagonSparrow
+Content/ParagonGreystone
 
 # Binary Files
 Binaries/*

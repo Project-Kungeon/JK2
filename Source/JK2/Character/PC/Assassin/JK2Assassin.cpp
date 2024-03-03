@@ -1,6 +1,7 @@
 // Copyright 2024 All Rights Reserved by J&K
 
 #include "JK2Assassin.h"
+#include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(JK2Assassin)
@@ -32,6 +33,49 @@ void AJK2Assassin::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AJK2Assassin::Attack()
+{
+	Super::Attack();
+}
+
+void AJK2Assassin::ComboActionBegin()
+{
+	Super::ComboActionBegin();
+}
+
+void AJK2Assassin::DoCombo()
+{
+	Super::DoCombo();
+	switch ( CurrentCombo )
+	{
+	case 0:
+		CurrentCombo = 1;
+		PlayAnimMontage(ComboActionMontage1, 1.f);
+		break;
+	case 1:
+		CurrentCombo = 2;
+		PlayAnimMontage(ComboActionMontage2, 1.f);
+		break;
+	case 2:
+		CurrentCombo = 3;
+		PlayAnimMontage(ComboActionMontage3, 1.f);
+		break;
+	}
+}
+
+void AJK2Assassin::ComboActionEnd()
+{
+	Super::ComboActionEnd();
+}
+
+
+//JJH Assignment
+void AJK2Assassin::SkillQ(const FInputActionValue& value)
+{
+	Super::SkillQ(value);
+	UE_LOG(LogTemp, Log, TEXT("This is %s"), *this->GetName());
+}
+
 void AJK2Assassin::CheckWeaponTrace()
 {
 	if ( !bWeaponActive )
@@ -58,7 +102,7 @@ void AJK2Assassin::CheckWeaponTrace()
 		FLinearColor::Red,
 		FLinearColor::Green,
 		1.f);
-	
+
 	bool bSuccessR = UKismetSystemLibrary::SphereTraceMulti(
 		this,
 		StartR,
@@ -74,7 +118,7 @@ void AJK2Assassin::CheckWeaponTrace()
 		FLinearColor::Green,
 		1.f);
 
-	if ( bSuccessL|| bSuccessR )
+	if ( bSuccessL || bSuccessR )
 	{
 		// FDamageEvent DamageEvent;
 
@@ -90,7 +134,7 @@ void AJK2Assassin::CheckWeaponTrace()
 
 				// TODO HitDamage
 				UE_LOG(LogTemp, Log, TEXT("HitDamage"));
-				
+
 			}
 		}
 	}
