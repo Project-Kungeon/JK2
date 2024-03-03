@@ -10,7 +10,7 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-
+#include "JK2PlayerCharacter.h"
 
 // Sets default values
 AJK2PlayerCharacterBase::AJK2PlayerCharacterBase()

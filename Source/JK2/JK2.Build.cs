@@ -15,7 +15,11 @@ public class JK2 : ModuleRules
         PrivateIncludePaths.AddRange(new string[]
         {
             "JK2/",
-            "JK2/Network/"
+            "JK2/Network/",
+            "JK2/PacketHandler/",
+            "JK2/PacketHandler/lobby/",
+            "JK2/PacketHandler/room/"
+
         });
 
         // Uncomment if you are using Slate UI

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "JK2PlayerCharacterBase.h"
 #include "JK2PlayerCharacter.generated.h"

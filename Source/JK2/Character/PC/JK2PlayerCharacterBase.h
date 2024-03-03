@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Message.pb.h"
-#include "JK2PlayerCharacter.h"
 #include "JK2PlayerCharacterBase.generated.h"
 
 UCLASS()

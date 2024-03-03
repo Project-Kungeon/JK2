@@ -17,3 +17,7 @@ using boost::asio::ip::tcp;
 
 #define USING_SHARED_PTR(name)	using name##Ref = TSharedPtr<class name>;
 USING_SHARED_PTR(PacketSession);
+
+#include "./PacketHandler/ClientPacketHandler.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
