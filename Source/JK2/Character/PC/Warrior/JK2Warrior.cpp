@@ -30,7 +30,7 @@ void AJK2Warrior::Tick(float DeltaTime)
 
 void AJK2Warrior::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);	
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 //JJH Assignment
 void AJK2Warrior::SkillQ(const FInputActionValue& value)

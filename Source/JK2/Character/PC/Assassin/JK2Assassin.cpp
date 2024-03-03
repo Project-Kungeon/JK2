@@ -1,6 +1,7 @@
 // Copyright 2024 All Rights Reserved by J&K
 
 #include "JK2Assassin.h"
+#include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(JK2Assassin)
