@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "JK2PlayerCharacterBase.h"
 #include "JK2PlayerCharacter.generated.h"
 
 UCLASS()
@@ -20,7 +20,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -37,11 +37,11 @@ public:
 	virtual void SkillQ(const FInputActionValue& Value);
 
 	UFUNCTION(BlueprintCallable)
-	virtual void ComboActionBegin();
+		virtual void ComboActionBegin();
 	UFUNCTION(BlueprintCallable)
-	virtual void DoCombo();
+		virtual void DoCombo();
 	UFUNCTION(BlueprintCallable)
-	virtual void ComboActionEnd();
+		virtual void ComboActionEnd();
 
 	//combo == 0 not start combo>=1->Combo Start
 	int32 CurrentCombo = 0;
@@ -50,10 +50,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
-	TObjectPtr<class USpringArmComponent> CameraBoom;
+		TObjectPtr<class USpringArmComponent> CameraBoom;
 
 	UPROPERTY(EditAnywhere, Category = "Camera")
-	TObjectPtr<class UCameraComponent> FollowCamera;
+		TObjectPtr<class UCameraComponent> FollowCamera;
 
 	//Move&Look Function
 
@@ -61,9 +61,24 @@ protected:
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-	bool bWeaponActive;
+		bool bWeaponActive;
 
 	UPROPERTY()
-	TSet<AActor*> WeaponAttackTargets;
+		TSet<AActor*> WeaponAttackTargets;
 
+
+protected:
+	// Relate Network...
+
+	// 패킷 전송 주기(Pakcet Sending Delay)
+	const float MOVE_PACKET_SEND_DELAY = 0.2f;
+	float MovePacketSendTimer = MOVE_PACKET_SEND_DELAY;
+
+	// Position Cache (이 값으로 이동 여부 판단)
+	FVector2D DesiredInput;
+	FVector DesiredMoveDirection;
+	float DesiredYaw;
+
+	// Dirty Flag Test (이동 상태 검사)
+	FVector2D LastDesiredInput;
 };

@@ -2,6 +2,7 @@
 
 
 #include "JK2PlayerCharacter.h"
+#include "JK2.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -62,6 +63,40 @@ void AJK2PlayerCharacter::BeginPlay()
 void AJK2PlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Send Packet
+	//bool ForceSendPacket = false;	// 상태검사 결과에 따라 패킷 전송할지 말지 판단합니다.
+
+	//if ( LastDesiredInput != DesiredInput )
+	//{
+	//	// 움직였다면, 패킷 전송을 합니다.
+	//	ForceSendPacket = true;
+	//	LastDesiredInput = DesiredInput;
+	//}
+
+	//if ( DesiredInput == FVector2D::Zero() )
+	//	SetMoveState(message::MOVE_STATE_IDLE);
+	//else
+	//	SetMoveState(message::MOVE_STATE_RUN);
+
+	//// 패킷 전송 주기 계산
+	//MovePacketSendTimer -= DeltaTime;
+
+	//if ( MovePacketSendTimer >= 0 || ForceSendPacket )
+	//{
+	//	MovePacketSendTimer = MOVE_PACKET_SEND_DELAY;
+	//	message::C_Move	MovePkt;
+
+	//	{
+	//		message::PosInfo* info = MovePkt.mutable_posinfo();
+	//		info->CopyFrom(*PlayerInfo);
+	//		info->set_yaw(DesiredYaw);
+	//		info->set_state(GetMoveState());
+	//	}
+	//	// TODO : Send Packet should be needed
+	//	// Will Test...
+	//	SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
+	//}
 }
 
 // Called to bind functionality to input

@@ -3,4 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <boost/asio.hpp>
+#include <boost/bind/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/asio/buffer.hpp>
+#include "Message.pb.h"
+#include "Packet.h"
 
+class PacketSession;
+
+using namespace boost;
+using boost::asio::ip::tcp;
+
+#define USING_SHARED_PTR(name)	using name##Ref = TSharedPtr<class name>;
+USING_SHARED_PTR(PacketSession);
+
+#include "Lobby/LobbyPacketHandler.h"
+#include "Room/RoomPacketHandler.h"
+#include "ClientPacketHandler.h"
+
+#include "JK2GameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+
+#define SEND_PACKET(headerCode, pkt)															\
+	const size_t requiredSize = PacketUtil::RequiredSize(pkt);									\
+	char* rawBuffer = new char[requiredSize];													\
+	auto sendBuffer = asio::buffer(rawBuffer, requiredSize);									\
+	PacketUtil::Serialize(sendBuffer, headerCode, pkt);											\
+	Cast<UJK2GameInstance>(GWorld->GetGameInstance())->SendPacket(sendBuffer);

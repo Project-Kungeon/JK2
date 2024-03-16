@@ -16,6 +16,7 @@ public class JK2 : ModuleRules
         {
             "JK2/",
             "JK2/Network/",
+            "JK2/Network/PacketHandler",
             "JK2/System/"
         });
 
