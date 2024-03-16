@@ -65,5 +65,5 @@ public:
 
 	UPROPERTY()
 	TSet<AActor*> WeaponAttackTargets;
-
+	FName path;
 };
