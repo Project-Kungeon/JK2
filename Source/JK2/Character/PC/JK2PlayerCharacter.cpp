@@ -114,7 +114,7 @@ void AJK2PlayerCharacter::SkillQ(const FInputActionValue& value)
 
 void AJK2PlayerCharacter::ComboActionBegin()
 {
-	if ( SaveAttacking )
+	if ( SaveAttacking && CurrentCombo)
 	{
 		SaveAttacking = false;
 		DoCombo();

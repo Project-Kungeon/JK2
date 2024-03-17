@@ -47,6 +47,7 @@ public:
 	int32 CurrentCombo = 0;
 	uint8 IsAttacking : 1;
 	uint8 SaveAttacking : 1;
+	int32 MaxCombo;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
