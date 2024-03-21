@@ -73,7 +73,7 @@ void AJK2PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 void AJK2PlayerCharacter::Move(const FInputActionValue& Value)
 {
 	FVector2D MovementVector = Value.Get<FVector2D>();
-
+	
 	const FRotator Rotation = Controller->GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -82,7 +82,6 @@ void AJK2PlayerCharacter::Move(const FInputActionValue& Value)
 
 	AddMovementInput(ForwardDirection, MovementVector.X);
 	AddMovementInput(RightDirection, MovementVector.Y);
-
 }
 
 void AJK2PlayerCharacter::Look(const FInputActionValue& Value)
@@ -123,6 +122,7 @@ void AJK2PlayerCharacter::ComboActionBegin()
 
 void AJK2PlayerCharacter::DoCombo()
 {
+	
 }
 
 void AJK2PlayerCharacter::ComboActionEnd()

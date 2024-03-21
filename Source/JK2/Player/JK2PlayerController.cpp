@@ -106,6 +106,7 @@ void AJK2PlayerController::MoveAct(const FInputActionValue& Value)
 	if ( ControlledCharacter )
 	{
 		ControlledCharacter->Move(Value);
+		UE_LOG(LogTemp, Log, TEXT("%s"), *Value.ToString());
 	}
 }
 
