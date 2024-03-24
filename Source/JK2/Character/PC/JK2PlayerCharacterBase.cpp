@@ -11,28 +11,12 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "JK2PlayerCharacter.h"
+#include "PlayerCharacter.h"
 
 AJK2PlayerCharacterBase::AJK2PlayerCharacterBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
-}
-
-AJK2PlayerCharacterBase::~AJK2PlayerCharacterBase()
-{
-	delete PlayerInfo;
-	delete DestInfo;
-	PlayerInfo = nullptr;
-	DestInfo = nullptr;
-}
-
-// Called when the game starts or when spawned
-void AJK2PlayerCharacterBase::BeginPlay()
-{
-	//Super::BeginPlay();
-	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
@@ -54,6 +38,32 @@ void AJK2PlayerCharacterBase::BeginPlay()
 
 	PlayerInfo = new message::PosInfo();
 	DestInfo = new message::PosInfo();
+
+}
+
+AJK2PlayerCharacterBase::~AJK2PlayerCharacterBase()
+{
+	delete PlayerInfo;
+	delete DestInfo;
+	PlayerInfo = nullptr;
+	DestInfo = nullptr;
+}
+
+// Called when the game starts or when spawned
+void AJK2PlayerCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+	// Set size for collision capsule
+	{
+		FVector Location = GetActorLocation();
+		DestInfo->set_x(Location.X);
+		DestInfo->set_y(Location.Y);
+		DestInfo->set_z(Location.Z);
+		DestInfo->set_yaw(GetControlRotation().Yaw);
+
+		// 
+		SetMoveState(message::MOVE_STATE_IDLE);
+	}
 
 }
 
@@ -96,7 +106,7 @@ void AJK2PlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 bool AJK2PlayerCharacterBase::isMyPlayer()
 {
-	return Cast<AJK2PlayerCharacter>(this) != nullptr;
+	return Cast<APlayerCharacter>(this) != nullptr;
 }
 
 void AJK2PlayerCharacterBase::SetMoveState(message::MoveState State)
@@ -108,7 +118,7 @@ void AJK2PlayerCharacterBase::SetMoveState(message::MoveState State)
 	PlayerInfo->set_state(State);
 }
 
-void AJK2PlayerCharacterBase::SetPlayerInfo(message::PosInfo& Info)
+void AJK2PlayerCharacterBase::SetPlayerInfo(const message::PosInfo& Info)
 {
 	if ( PlayerInfo->object_id() != 0 )
 		return;

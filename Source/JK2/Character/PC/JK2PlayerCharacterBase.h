@@ -37,7 +37,7 @@ public:
 
 	// Getter, Setter
 public:
-	void SetPlayerInfo(message::PosInfo& Info);
+	void SetPlayerInfo(const message::PosInfo& Info);
 	void SetDestInfo(message::PosInfo& Info);
 	message::PosInfo* GetPlayerInfo() { return PlayerInfo; }
 
