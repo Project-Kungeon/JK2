@@ -4,7 +4,7 @@
 #include "NetworkWorker.h"
 
 NetworkWorker::NetworkWorker(TSharedPtr<asio::io_context> io_context, TSharedPtr<PacketSession> Session)
-	: io_contextRef(io_context), SessionRef(Session)
+	: SessionRef(Session)
 {
 	Thread = FRunnableThread::Create(this, TEXT("NetworkWorker"));
 }
@@ -26,9 +26,14 @@ uint32 NetworkWorker::Run()
 	try
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Running")));
-		io_contextRef->run();
-		;		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Done")));
+		if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
+		{
+			Session->GetIoContext()->run();
+		}
 
+		//io_contextRef->run();
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Done")));
 	}
 	catch ( const std::exception& e )
 	{
@@ -43,15 +48,18 @@ uint32 NetworkWorker::Run()
 void NetworkWorker::Exit()
 {
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Exited")));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Exited")));
 }
 
 void NetworkWorker::Stop()
 {
-
 }
 
 void NetworkWorker::Destroy()
 {
 	Running = false;
+	if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
+	{
+		Session->GetIoContext()->stop();
+	}
 }

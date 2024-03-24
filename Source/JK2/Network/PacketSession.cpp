@@ -5,10 +5,20 @@
 #include "ClientPacketHandler.h"
 
 PacketSession::PacketSession(TSharedPtr<asio::io_context> io_context)
-	: _socket(*io_context.Get())
+	: _socket(*io_context.Get()), _ioContextRef(io_context)
 {
 	ClientPacketHandler::Init();
+	
 	memset(_recvBuffer, 0, RecvBufferSize);
+}
+
+PacketSession::~PacketSession()
+{
+	if ( NetworkThread != nullptr )
+	{
+		NetworkThread->Destroy();
+		NetworkThread = nullptr;
+	}
 }
 
 void PacketSession::Run(TSharedPtr<asio::io_context> io_context)
@@ -49,7 +59,9 @@ void PacketSession::OnConnect(const boost::system::error_code& err)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success")));
 		//MakeLoginReq(1000);
-
+		AsyncRead();
+		message::C_Login Pkt;
+		SEND_PACKET(message::HEADER::LOGIN_REQ, Pkt);
 
 	}
 	else

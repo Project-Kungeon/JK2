@@ -18,10 +18,8 @@ public:
 
 	PacketSession(TSharedPtr<asio::io_context> io_context);
 
-	~PacketSession()
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("~PacketSession()")));
-	}
+	~PacketSession();
+
 
 	void Run(asio::io_context& io_context);
 	void Run(TSharedPtr<asio::io_context> io_context);
@@ -33,6 +31,14 @@ public:
 	{
 		AsyncWrite(buffer);
 	}
+	// 비동기 읽기 호출
+	void AsyncRead();
+
+	TSharedPtr<asio::io_context> GetIoContext()
+	{
+		return _ioContextRef;
+	}
+
 
 private:
 	// 비동기 쓰기 호출
@@ -44,8 +50,7 @@ private:
 	// 버퍼 송신 컨텐츠 코드
 	void OnWrite(const boost::system::error_code& err, size_t size);
 
-	// 비동기 읽기 호출
-	void AsyncRead();
+	
 
 	// 버퍼 수신 컨텐츠 코드
 	void OnRead(const boost::system::error_code& err, size_t size);
@@ -62,4 +67,5 @@ private:
 	char _recvBuffer[RecvBufferSize];
 	std::string _sendMsg;
 	TSharedPtr<class NetworkWorker> NetworkThread;
+	TSharedPtr<asio::io_context> _ioContextRef;
 };

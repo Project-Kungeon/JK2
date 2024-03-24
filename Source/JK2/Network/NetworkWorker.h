@@ -12,6 +12,8 @@ class JK2_API NetworkWorker : public FRunnable
 {
 public:
 	NetworkWorker(TSharedPtr<asio::io_context> io_context, TSharedPtr<PacketSession> Session);
+
+
 	~NetworkWorker();
 
 	// 가상함수 (Override)
@@ -31,7 +33,6 @@ protected:
 
 	// 소켓 & 세션 멤버 
 	TWeakPtr<class PacketSession> SessionRef;
-	TSharedPtr<asio::io_context> io_contextRef;
 
 
 };

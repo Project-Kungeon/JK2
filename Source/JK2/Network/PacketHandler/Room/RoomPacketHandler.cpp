@@ -5,7 +5,7 @@ bool RoomPacketHandler::Handle_S_EnterRoom(PacketSessionRef& session, message::S
 	if ( auto* GameInstance = Cast<UJK2GameInstance>(GWorld->GetGameInstance()) )
 	{
 		// TODO : 다른 플레이어의 폰을 소환
-		//GameInstance->HandleSpawn(pkt);
+		GameInstance->HandleSpawn(pkt);
 	}
 
 	return true;
@@ -25,7 +25,7 @@ bool RoomPacketHandler::Handle_S_Spawn(PacketSessionRef& session, message::S_Spa
 	if ( auto* GameInstance = Cast<UJK2GameInstance>(GWorld->GetGameInstance()) )
 	{
 		// TODO : 다른 오브젝트의 스폰 패킷을 처리
-		//GameInstance->HandleSpawn(pkt);
+		GameInstance->HandleSpawn(pkt);
 	}
 	return true;
 }
