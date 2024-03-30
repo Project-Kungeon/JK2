@@ -4,8 +4,8 @@
 #include "NetworkWorker.h"
 #include "ClientPacketHandler.h"
 
-PacketSession::PacketSession(TSharedPtr<asio::io_context> io_context)
-	: _socket(*io_context.Get()), _ioContextRef(io_context)
+PacketSession::PacketSession(TWeakPtr<asio::io_context> io_context)
+	: _socket(*io_context.Pin().Get()), _ioContextRef(io_context)
 {
 	ClientPacketHandler::Init();
 	
@@ -109,6 +109,8 @@ void PacketSession::OnRead(const boost::system::error_code& err, size_t size)
 	if ( !err )
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Read")));
+		HandlePacket(_recvBuffer, size);
+		AsyncRead();
 	}
 	else
 	{
@@ -118,34 +120,36 @@ void PacketSession::OnRead(const boost::system::error_code& err, size_t size)
 
 void PacketSession::HandlePacket(char* ptr, size_t size)
 {
-	asio::mutable_buffer buffer = asio::buffer(ptr, size);
-	int offset = 0;
-	PacketHeader header;
-	PacketUtil::ParseHeader(buffer, &header, offset);
+	PacketSessionRef session = this->AsShared();
+	ClientPacketHandler::HandlePacket(session, ptr, size);
+	//asio::mutable_buffer buffer = asio::buffer(ptr, size);
+	//int offset = 0;
+	//PacketHeader header;
+	//PacketUtil::ParseHeader(buffer, &header, offset);
 
-	// 헤더 코드 확인
-	std::cout << "HandlePacket " << message::HEADER_Name(header.Code) << '\n';
+	//// 헤더 코드 확인
+	//std::cout << "HandlePacket " << message::HEADER_Name(header.Code) << '\n';
 
-	switch ( header.Code )
-	{
-	case message::HEADER::LOGIN_RES:
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Success!")));
-		break;
-	}
-}
-
-void PacketSession::MakeLoginReq(const int id)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("LoginReq Go..")));
-	message::LoginReq loginReq;
-	loginReq.set_id(id);
-	const size_t requiredSize = PacketUtil::RequiredSize(loginReq);
-	char* rawBuffer = new char[requiredSize];
-	auto buffer = asio::buffer(rawBuffer, requiredSize);
-
-	//if (!PacketUtil::Serialize(buffer, message::MessageCode::LOGIN_REQ, loginReq));
+	//switch ( header.Code )
 	//{
-	//	// TODO : 패킷 잘못 적을 경우
+	//case message::HEADER::LOGIN_RES:
+	//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Success!")));
+	//	break;
 	//}
-	this->AsyncWrite(buffer);
 }
+
+//void PacketSession::MakeLoginReq(const int id)
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("LoginReq Go..")));
+//	message::LoginReq loginReq;
+//	loginReq.set_id(id);
+//	const size_t requiredSize = PacketUtil::RequiredSize(loginReq);
+//	char* rawBuffer = new char[requiredSize];
+//	auto buffer = asio::buffer(rawBuffer, requiredSize);
+//
+//	//if (!PacketUtil::Serialize(buffer, message::MessageCode::LOGIN_REQ, loginReq));
+//	//{
+//	//	// TODO : 패킷 잘못 적을 경우
+//	//}
+//	this->AsyncWrite(buffer);
+//}

@@ -18,8 +18,8 @@ void UJK2GameInstance::ConnectToGameServer()
 	GameSession->Connect(std::string("127.0.0.1"), 4242);
 	GameSession->Run(io_contextRef);
 	{
-		message::C_Login Pkt;
-		SEND_PACKET(message::HEADER::LOGIN_REQ, Pkt);
+		/*message::C_Login Pkt;
+		SEND_PACKET(message::HEADER::LOGIN_REQ, Pkt);*/
 	}
 }
 

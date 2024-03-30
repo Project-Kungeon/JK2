@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "JK2.h"
 #include "JK2GameInstance.h"
 

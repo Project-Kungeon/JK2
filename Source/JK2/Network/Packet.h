@@ -36,8 +36,8 @@ public:
 
 		memcpy(buffer.data(), &header, sizeof(PacketHeader));
 
-		// buffer.data() : Çì´õÀÇ ½ÃÀÛÁ¡
-		// buffer.data()) + sizeof(PacketHeader) : Çì´õÀÇ ³¡Á¡ = payload ½ÃÀÛÁ¡
+		// buffer.data() : ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// buffer.data()) + sizeof(PacketHeader) : ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ = payload ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		char* payloadPtr = static_cast<char*>(buffer.data()) + sizeof(PacketHeader);
 		if (!msg.SerializeToArray(payloadPtr, static_cast<int>(buffer.size()) - sizeof(PacketHeader)))
 			return false;
@@ -47,11 +47,11 @@ public:
 
 	static bool ParseHeader(const asio::mutable_buffer& buffer, PacketHeader* header, int& offset)
 	{
-		// ÀÐ°í ÀÖ´Â ºÎºÐÀÌ ¹öÆÛ ¹Ù±ùÀ¸·Î ³ª°¥ °æ¿ì
+		// ï¿½Ð°ï¿½ ï¿½Ö´ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		if (buffer.size() <= offset)
 			return false;
 
-		// ³²Àº ¹öÆÛ µ¥ÀÌÅÍ°¡ Çì´õ »çÀÌÁîº¸´Ù ÀÛÀ» °æ¿ì
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½îº¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		const size_t remainedSize = buffer.size() - offset;
 		if (remainedSize < sizeof(PacketHeader))
 			return false;
@@ -63,8 +63,8 @@ public:
 		return true;
 	}
 
-	// payloadSize : Çì´õ¸¦ Á¦¿ÜÇÑ »çÀÌÁî
-	// offset : Çì´õ ÀÌÈÄºÎÅÍ ½ÃÀÛµÇ´Â payload ½ÃÀÛÁ¡
+	// payloadSize : ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// offset : ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÛµÇ´ï¿½ payload ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	static bool Parse(google::protobuf::Message& msg, const asio::mutable_buffer& buffer, const int payloadSize, int& offset)
 	{
 		if (buffer.size() < sizeof(PacketHeader))
@@ -87,7 +87,7 @@ public:
 
 //int main()
 //{
-//	// Á÷·ÄÈ­
+//	// ï¿½ï¿½ï¿½ï¿½È­
 //	Protocol::TEST test;
 //	test.set_hp(10);
 //	test.set_id(100);
@@ -97,7 +97,7 @@ public:
 //	const auto buffer = asio::buffer(rawBuffer, requiredSize);
 //	PacketUtil::Serialize(buffer, TEST_PACKET, test);
 //
-//	// ¿ªÁ÷·ÄÈ­
+//	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­
 //	PacketHeader header;
 //	char* PacketBuffer = new char[4];
 //	int offset = 0;

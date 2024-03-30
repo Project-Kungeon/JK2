@@ -28,7 +28,7 @@ uint32 NetworkWorker::Run()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Running")));
 		if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
 		{
-			Session->GetIoContext()->run();
+			Session->GetIoContext().Pin()->run();
 		}
 
 		//io_contextRef->run();
@@ -60,6 +60,6 @@ void NetworkWorker::Destroy()
 	Running = false;
 	if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
 	{
-		Session->GetIoContext()->stop();
+		Session->GetIoContext().Pin()->stop();
 	}
 }

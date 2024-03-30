@@ -16,7 +16,7 @@ public:
 		memset(_recvBuffer, 0, RecvBufferSize);
 	}
 
-	PacketSession(TSharedPtr<asio::io_context> io_context);
+	PacketSession(TWeakPtr<asio::io_context> io_context);
 
 	~PacketSession();
 
@@ -34,7 +34,7 @@ public:
 	// 비동기 읽기 호출
 	void AsyncRead();
 
-	TSharedPtr<asio::io_context> GetIoContext()
+	TWeakPtr<asio::io_context> GetIoContext()
 	{
 		return _ioContextRef;
 	}
@@ -59,7 +59,7 @@ private:
 	void HandlePacket(char* ptr, size_t size);
 
 	// 로그인 요청 패킷 전달
-	void MakeLoginReq(const int id);
+	/*void MakeLoginReq(const int id);*/
 
 private:
 	static const int RecvBufferSize = 1024;
@@ -67,5 +67,5 @@ private:
 	char _recvBuffer[RecvBufferSize];
 	std::string _sendMsg;
 	TSharedPtr<class NetworkWorker> NetworkThread;
-	TSharedPtr<asio::io_context> _ioContextRef;
+	TWeakPtr<asio::io_context> _ioContextRef;
 };
