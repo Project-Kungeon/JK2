@@ -29,7 +29,7 @@ private:
 	static bool HandlePacket(ProcessFunc func, PacketSessionRef& session, asio::mutable_buffer& buffer, int& offset)
 	{
 		PacketType pkt;
-		if ( !PacketUtil::Parse(pkt, buffer, buffer.size(), offset) ) return false;
+		if ( !PacketUtil::Parse(pkt, buffer, buffer.size() - offset, offset) ) return false;
 
 		return func(session, pkt);
 	}

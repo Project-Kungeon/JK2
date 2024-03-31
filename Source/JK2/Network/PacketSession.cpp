@@ -4,21 +4,35 @@
 #include "NetworkWorker.h"
 #include "ClientPacketHandler.h"
 
-PacketSession::PacketSession(TWeakPtr<asio::io_context> io_context)
-	: _socket(*io_context.Pin().Get()), _ioContextRef(io_context)
+PacketSession::PacketSession(asio::io_context* io_context)
+	: _socket(*io_context), _io_context(io_context)
 {
 	ClientPacketHandler::Init();
-	
 	memset(_recvBuffer, 0, RecvBufferSize);
 }
+
+//PacketSession::PacketSession(TWeakPtr<asio::io_context> io_context)
+//	: _socket(*io_context.Pin().Get()), _ioContextRef(io_context)
+//{
+//	ClientPacketHandler::Init();
+//	
+//	memset(_recvBuffer, 0, RecvBufferSize);
+//}
 
 PacketSession::~PacketSession()
 {
 	if ( NetworkThread != nullptr )
 	{
+		_io_context->stop();
+		//_io_context = nullptr;
 		NetworkThread->Destroy();
 		NetworkThread = nullptr;
 	}
+}
+
+void PacketSession::Run()
+{
+	NetworkThread = MakeShared<NetworkWorker>(AsShared());
 }
 
 void PacketSession::Run(TSharedPtr<asio::io_context> io_context)
@@ -60,8 +74,6 @@ void PacketSession::OnConnect(const boost::system::error_code& err)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success")));
 		//MakeLoginReq(1000);
 		AsyncRead();
-		message::C_Login Pkt;
-		SEND_PACKET(message::HEADER::LOGIN_REQ, Pkt);
 
 	}
 	else

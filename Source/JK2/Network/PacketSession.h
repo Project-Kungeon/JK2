@@ -11,17 +11,16 @@
 class JK2_API PacketSession : public TSharedFromThis<PacketSession>
 {
 public:
-	PacketSession(asio::io_context& io_context) : _socket(io_context)
-	{
-		memset(_recvBuffer, 0, RecvBufferSize);
-	}
+	PacketSession() : _socket(nullptr) {}
 
-	PacketSession(TWeakPtr<asio::io_context> io_context);
+	PacketSession(asio::io_context* io_context);
+
+	//PacketSession(TWeakPtr<asio::io_context> io_context);
 
 	~PacketSession();
 
 
-	void Run(asio::io_context& io_context);
+	void Run();
 	void Run(TSharedPtr<asio::io_context> io_context);
 
 	void Connect(std::string host, int port);
@@ -38,6 +37,8 @@ public:
 	{
 		return _ioContextRef;
 	}
+
+	asio::io_context& GetIOContext() { return *_io_context; }
 
 
 private:
@@ -66,6 +67,7 @@ private:
 	tcp::socket _socket;
 	char _recvBuffer[RecvBufferSize];
 	std::string _sendMsg;
+	asio::io_context* _io_context;
 	TSharedPtr<class NetworkWorker> NetworkThread;
 	TWeakPtr<asio::io_context> _ioContextRef;
 };

@@ -12,7 +12,7 @@ class JK2_API NetworkWorker : public FRunnable
 {
 public:
 	NetworkWorker(TSharedPtr<asio::io_context> io_context, TSharedPtr<PacketSession> Session);
-
+	NetworkWorker(TSharedPtr<PacketSession> Session);
 
 	~NetworkWorker();
 

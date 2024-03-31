@@ -2,8 +2,15 @@
 
 
 #include "NetworkWorker.h"
+using work_guard_type = boost::asio::executor_work_guard<boost::asio::io_context::executor_type>;
 
 NetworkWorker::NetworkWorker(TSharedPtr<asio::io_context> io_context, TSharedPtr<PacketSession> Session)
+	: SessionRef(Session)
+{
+	Thread = FRunnableThread::Create(this, TEXT("NetworkWorker"));
+}
+
+NetworkWorker::NetworkWorker(TSharedPtr<PacketSession> Session)
 	: SessionRef(Session)
 {
 	Thread = FRunnableThread::Create(this, TEXT("NetworkWorker"));
@@ -28,7 +35,9 @@ uint32 NetworkWorker::Run()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Network Thread Running")));
 		if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
 		{
-			Session->GetIoContext().Pin()->run();
+			//Session->GetIoContext().Pin()->run();
+			work_guard_type work_guard(Session->GetIOContext().get_executor());
+			Session->GetIOContext().run();
 		}
 
 		//io_contextRef->run();
@@ -58,8 +67,9 @@ void NetworkWorker::Stop()
 void NetworkWorker::Destroy()
 {
 	Running = false;
-	if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
-	{
-		Session->GetIoContext().Pin()->stop();
-	}
+	Thread->Kill();
+	//if ( TSharedPtr<PacketSession> Session = SessionRef.Pin() )
+	//{
+	//	Session->GetIoContext().Pin()->stop();
+	//}
 }

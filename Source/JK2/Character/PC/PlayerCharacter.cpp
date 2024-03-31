@@ -96,7 +96,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		}
 		// TODO : Send Packet should be needed
 		// Will Test...
-		SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
+		//SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
 	}
 
 	

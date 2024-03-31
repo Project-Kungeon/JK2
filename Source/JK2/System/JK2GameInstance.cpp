@@ -13,18 +13,26 @@ void UJK2GameInstance::ConnectToGameServer()
 	TSharedPtr<asio::io_context> io_contextRef = MakeShared<asio::io_context>();
 
 	//_sock = new tcp::socket(io_context);
-	GameSession = MakeShared<PacketSession>(io_contextRef);
+	//GameSession = MakeShared<PacketSession>(io_contextRef);
+
+	asio::io_context* io_context = new asio::io_context;
+	GameSession = MakeShared<PacketSession>(io_context);
 
 	GameSession->Connect(std::string("127.0.0.1"), 4242);
-	GameSession->Run(io_contextRef);
-	{
-		/*message::C_Login Pkt;
-		SEND_PACKET(message::HEADER::LOGIN_REQ, Pkt);*/
-	}
+	GameSession->Run();
+	
+	message::C_Login Pkt;
+	SEND_PACKET(message::HEADER::LOGIN_REQ, Pkt);
+
+	//GameSession->Run(io_contextRef);
 }
 
 void UJK2GameInstance::DisconnectFromGameServer()
 {
+	GameSession->GetIOContext().stop();
+	//delete &(GameSession->GetIOContext());
+	GameSession = nullptr;
+	
 }
 
 void UJK2GameInstance::SendPacket(asio::mutable_buffer& buffer)
@@ -68,7 +76,9 @@ void UJK2GameInstance::HandleSpawn(const message::ObjectInfo& info, bool isMyPla
 	}
 	else
 	{
-		auto* Player = Cast<AJK2PlayerCharacterBase>(World->SpawnActor(OtherPlayerClass, &SpawnLocation));
+		auto* a = World->SpawnActor(OtherPlayerClass, &SpawnLocation);
+
+		auto* Player = Cast<AJK2PlayerCharacterBase>(a);
 		Player->SetPlayerInfo(info.pos_info());
 		Players.Add(info.object_id(), Player);
 	}

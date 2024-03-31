@@ -13,6 +13,13 @@ bool LobbyPacketHandler::Handle_S_Login(PacketSessionRef& session, message::S_Lo
     message::C_EnterRoom EnterRoomPkt;
     EnterRoomPkt.set_playerindex(0);
 
-    SEND_PACKET(message::HEADER::ENTER_ROOM_REQ, EnterRoomPkt);
+    const size_t requiredSize = PacketUtil::RequiredSize(pkt);									
+    char* rawBuffer = new char[requiredSize];													
+    auto sendBuffer = asio::buffer(rawBuffer, requiredSize);									
+    PacketUtil::Serialize(sendBuffer, message::HEADER::ENTER_ROOM_REQ, pkt);
+
+    session.ToSharedRef().Get().SendPacket(sendBuffer);
+
+    //SEND_PACKET(message::HEADER::ENTER_ROOM_REQ, EnterRoomPkt);
     return true;
 }
