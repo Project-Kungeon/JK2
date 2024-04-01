@@ -38,6 +38,8 @@ public:
 		return _ioContextRef;
 	}
 
+	UGameInstance* GetGameInstance() { return GameInstance; }
+
 	asio::io_context& GetIOContext() { return *_io_context; }
 
 
@@ -68,6 +70,7 @@ private:
 	char _recvBuffer[RecvBufferSize];
 	std::string _sendMsg;
 	asio::io_context* _io_context;
+	UGameInstance* GameInstance;
 	TSharedPtr<class NetworkWorker> NetworkThread;
 	TWeakPtr<asio::io_context> _ioContextRef;
 };

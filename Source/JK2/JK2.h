@@ -32,3 +32,10 @@ USING_SHARED_PTR(PacketSession);
 	auto sendBuffer = asio::buffer(rawBuffer, requiredSize);									\
 	PacketUtil::Serialize(sendBuffer, headerCode, pkt);											\
 	Cast<UJK2GameInstance>(GWorld->GetGameInstance())->SendPacket(sendBuffer);
+
+#define SEND_PACKET_V2(session, headerCode, pkt)												\
+	const size_t requiredSize = PacketUtil::RequiredSize(pkt);									\
+	char* rawBuffer = new char[requiredSize];													\
+	auto sendBuffer = asio::buffer(rawBuffer, requiredSize);									\
+	PacketUtil::Serialize(sendBuffer, message::HEADER::ENTER_ROOM_REQ, pkt);					\
+	session.ToSharedRef().Get().SendPacket(sendBuffer);

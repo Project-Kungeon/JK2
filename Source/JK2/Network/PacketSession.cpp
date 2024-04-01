@@ -9,6 +9,8 @@ PacketSession::PacketSession(asio::io_context* io_context)
 {
 	ClientPacketHandler::Init();
 	memset(_recvBuffer, 0, RecvBufferSize);
+	GameInstance = GWorld->GetGameInstance();
+
 }
 
 //PacketSession::PacketSession(TWeakPtr<asio::io_context> io_context)
@@ -24,6 +26,7 @@ PacketSession::~PacketSession()
 	if ( NetworkThread != nullptr )
 	{
 		_io_context->stop();
+		delete _io_context;
 		//_io_context = nullptr;
 		NetworkThread->Destroy();
 		NetworkThread = nullptr;

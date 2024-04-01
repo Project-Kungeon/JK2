@@ -22,7 +22,7 @@ bool RoomPacketHandler::Handle_S_LeaveRoom(PacketSessionRef& session, message::S
 
 bool RoomPacketHandler::Handle_S_Spawn(PacketSessionRef& session, message::S_Spawn& pkt)
 {
-	if ( auto* GameInstance = Cast<UJK2GameInstance>(GWorld->GetGameInstance()) )
+	if ( auto* GameInstance = Cast<UJK2GameInstance>(session->GetGameInstance()) )
 	{
 		// TODO : 다른 오브젝트의 스폰 패킷을 처리
 		GameInstance->HandleSpawn(pkt);
