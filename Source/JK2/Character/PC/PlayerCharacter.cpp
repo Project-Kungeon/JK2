@@ -68,7 +68,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	// Send Packet
 	bool ForceSendPacket = false;	// 상태검사 결과에 따라 패킷 전송할지 말지 판단합니다.
 
-	if ( LastDesiredInput != DesiredInput )
+	if ( LastDesiredInput != DesiredInput)
 	{
 	    // 움직였다면, 패킷 전송을 합니다.
 		ForceSendPacket = true;
@@ -83,7 +83,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	// 패킷 전송 주기 계산
 	MovePacketSendTimer -= DeltaTime;
 
-	if ( MovePacketSendTimer >= 0 || ForceSendPacket )
+	if ( (MovePacketSendTimer >= 0 || ForceSendPacket) && isConnected )
 	{
 		MovePacketSendTimer = MOVE_PACKET_SEND_DELAY;
 		message::C_Move	MovePkt;
@@ -96,7 +96,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		}
 		// TODO : Send Packet should be needed
 		// Will Test...
-		//SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
+		SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
 	}
 
 	

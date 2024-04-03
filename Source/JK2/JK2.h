@@ -38,4 +38,4 @@ USING_SHARED_PTR(PacketSession);
 	char* rawBuffer = new char[requiredSize];													\
 	auto sendBuffer = asio::buffer(rawBuffer, requiredSize);									\
 	PacketUtil::Serialize(sendBuffer, message::HEADER::ENTER_ROOM_REQ, pkt);					\
-	session.ToSharedRef().Get().SendPacket(sendBuffer);
+	Cast<UJK2GameInstance>(session->GetGameInstance())->SendPacket(sendBuffer);

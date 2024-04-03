@@ -73,6 +73,8 @@ void UJK2GameInstance::HandleSpawn(const message::ObjectInfo& info, bool isMyPla
 		MyPlayer = Player;
 		Players.Add(info.object_id(), Player);
 
+		Cast<APlayerCharacter>(Player)->isConnected = true;
+
 	}
 	else
 	{

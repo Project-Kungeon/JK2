@@ -57,6 +57,8 @@ public:
 	UPROPERTY()
 		TSet<AActor*> WeaponAttackTargets;
 
+	bool isConnected = false;
+
 
 protected:
 	// Relate Network...
