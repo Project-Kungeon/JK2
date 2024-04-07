@@ -61,7 +61,7 @@ void AJK2PlayerCharacterBase::BeginPlay()
 		DestInfo->set_z(Location.Z);
 		DestInfo->set_yaw(GetControlRotation().Yaw);
 
-		// 
+		
 		SetMoveState(message::MOVE_STATE_IDLE);
 	}
 
@@ -89,9 +89,20 @@ void AJK2PlayerCharacterBase::Tick(float DeltaTime)
 			AddMovementInput(GetActorForwardVector());
 
 		}
-		else
+		else if(State == message::MOVE_STATE_IDLE )
 		{
 
+			const FRotator YawRotation(0, DestInfo->yaw(), 0);
+
+			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+			AddMovementInput(ForwardDirection, 0);
+			AddMovementInput(RightDirection, 0);
+		}
+		else
+		{
+			
 		}
 
 	}
@@ -129,10 +140,12 @@ void AJK2PlayerCharacterBase::SetPlayerInfo(const message::PosInfo& Info)
 	SetActorLocation(Location);
 }
 
-void AJK2PlayerCharacterBase::SetDestInfo(message::PosInfo& Info)
+void AJK2PlayerCharacterBase::SetDestInfo(const message::PosInfo& Info)
 {
 	if ( PlayerInfo->object_id() != 0 )
-		return;
+	{
+		assert(PlayerInfo->object_id() == Info.object_id());
+	}
 	DestInfo->CopyFrom(Info);
 	SetMoveState(Info.state());
 }

@@ -27,5 +27,10 @@ void ClientPacketHandler::Init()
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("S_Spawn Handle")));
         return HandlePacket<message::S_Spawn>(RoomPacketHandler::Handle_S_Spawn, session, buffer, offset);
     };
+    GPacketHandler[message::HEADER::PLAYER_MOVE_RES] = [](PacketSessionRef& session, asio::mutable_buffer& buffer, int& offset)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("S_Move Handle")));
+        return HandlePacket<message::S_Move>(RoomPacketHandler::Handle_S_Move, session, buffer, offset);
+    };
 
 }

@@ -64,7 +64,7 @@ protected:
 	// Relate Network...
 
 	// 패킷 전송 주기(Pakcet Sending Delay)
-	const float MOVE_PACKET_SEND_DELAY = 0.2f;
+	const float MOVE_PACKET_SEND_DELAY = 0.1f;
 	float MovePacketSendTimer = MOVE_PACKET_SEND_DELAY;
 
 	// Position Cache (이 값으로 이동 여부 판단)

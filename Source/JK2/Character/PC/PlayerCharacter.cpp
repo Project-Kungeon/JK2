@@ -75,8 +75,11 @@ void APlayerCharacter::Tick(float DeltaTime)
 		LastDesiredInput = DesiredInput;
 	}
 
-	if ( DesiredInput == FVector2D::Zero() )
+	if ( (DesiredInput.X == 0 && DesiredInput.Y == 0) ||  GetVelocity().IsNearlyZero() )
+	{
 		SetMoveState(message::MOVE_STATE_IDLE);
+	}
+		
 	else
 		SetMoveState(message::MOVE_STATE_RUN);
 

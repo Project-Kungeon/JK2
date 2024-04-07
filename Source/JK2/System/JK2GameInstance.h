@@ -35,6 +35,9 @@ public:
 	// 게임 접속 후, 내 플레이어 스폰
 	void HandleSpawn(message::S_EnterRoom& EnterRoomPkt);
 
+	void HandleMove(const message::S_Move& movePkt);
+	void HandleDespawn(const message::S_Despawn& despawnPkt);
+
 private:
 	PacketSessionRef GameSession;
 

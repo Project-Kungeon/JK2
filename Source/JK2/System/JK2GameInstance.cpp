@@ -78,7 +78,7 @@ void UJK2GameInstance::HandleSpawn(const message::ObjectInfo& info, bool isMyPla
 	}
 	else
 	{
-		auto* a = World->SpawnActor(OtherPlayerClass, &SpawnLocation);
+			auto* a = World->SpawnActor(OtherPlayerClass, &SpawnLocation);
 
 		auto* Player = Cast<AJK2PlayerCharacterBase>(a);
 		Player->SetPlayerInfo(info.pos_info());
@@ -98,4 +98,27 @@ void UJK2GameInstance::HandleSpawn(message::S_Spawn& SpawnPkt)
 void UJK2GameInstance::HandleSpawn(message::S_EnterRoom& EnterRoomPkt)
 {
 	HandleSpawn(EnterRoomPkt.player(), true);
+}
+
+void UJK2GameInstance::HandleMove(const message::S_Move& movePkt)
+{
+	if ( GameSession == nullptr )
+		return;
+
+	auto* World = GetWorld();
+	if ( World == nullptr )
+		return;
+
+	const uint64 objectId = movePkt.posinfo().object_id();
+	AJK2PlayerCharacterBase** FindActor = Players.Find(objectId);
+	if ( FindActor == nullptr )
+		return;
+
+	AJK2PlayerCharacterBase* Player = (*FindActor);
+	if ( Player->isMyPlayer() )
+		return;
+
+	const message::PosInfo& info = movePkt.posinfo();
+	Player->SetDestInfo(info);
+
 }

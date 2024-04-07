@@ -43,10 +43,10 @@ bool RoomPacketHandler::Handle_S_Despawn(PacketSessionRef& session, message::S_D
 bool RoomPacketHandler::Handle_S_Move(PacketSessionRef& session, message::S_Move& pkt)
 {
 
-	if ( auto* GameInstance = Cast<UJK2GameInstance>(GWorld->GetGameInstance()) )
+	if ( auto* GameInstance = Cast<UJK2GameInstance>(session->GetGameInstance()) )
 	{
 		// TODO : 다른 플레이어의 이동 패킷을 처리
-		//GameInstance->HandleMove(pkt);
+		GameInstance->HandleMove(pkt);
 	}
 	return true;
 }
