@@ -2,13 +2,12 @@
 
 
 #include "JK2PlayerCharacter.h"
+#include "JK2.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "InputMappingContext.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
+#include "Animation/AnimMontage.h"
 
 // Sets default values
 AJK2PlayerCharacter::AJK2PlayerCharacter()
@@ -47,51 +46,17 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 
 	//Mesh
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f,0.0f,-88.0f),FRotator(0.0f, -90.0f, 0.0f));
-	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);	// ?
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
-	//InputMappingContext & InputAction
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> InputMappingContextRef(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Input/IMC_JK2.IMC_JK2'"));
-	if (nullptr != InputMappingContextRef.Object)
-	{
-		DefaultMappingContext = InputMappingContextRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionMoveRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Move.IA_Move'"));
-	if (nullptr != InputActionMoveRef.Object)
-	{
-		MoveAction = InputActionMoveRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionJumpRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Jump.IA_Jump'"));
-	if (nullptr != InputActionJumpRef.Object)
-	{
-		JumpAction = InputActionJumpRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionLookRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Look.IA_Look'"));
-	if (nullptr != InputActionLookRef.Object)
-	{
-		LookAction = InputActionLookRef.Object;
-	}
-
-	/**	고민해봐야 할 것
-	*	입력과 이동을 character에 구현할 것인가?
-	*	playercontroller의 기능에 더 가까운 것이 아닐까?
-	*	그렇게 구현하면 스킬 구현은?
-	*/
-
+	IsAttacking = false;
+	SaveAttacking = false;
 }
 
 // Called when the game starts or when spawned
 void AJK2PlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	APlayerController* PlayerController = CastChecked<APlayerController>(GetController());
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-	{
-		//Input Priority
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
-	
 }
 
 // Called every frame
@@ -99,21 +64,45 @@ void AJK2PlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Send Packet
+	//bool ForceSendPacket = false;	// 상태검사 결과에 따라 패킷 전송할지 말지 판단합니다.
+
+	//if ( LastDesiredInput != DesiredInput )
+	//{
+	//	// 움직였다면, 패킷 전송을 합니다.
+	//	ForceSendPacket = true;
+	//	LastDesiredInput = DesiredInput;
+	//}
+
+	//if ( DesiredInput == FVector2D::Zero() )
+	//	SetMoveState(message::MOVE_STATE_IDLE);
+	//else
+	//	SetMoveState(message::MOVE_STATE_RUN);
+
+	//// 패킷 전송 주기 계산
+	//MovePacketSendTimer -= DeltaTime;
+
+	//if ( MovePacketSendTimer >= 0 || ForceSendPacket )
+	//{
+	//	MovePacketSendTimer = MOVE_PACKET_SEND_DELAY;
+	//	message::C_Move	MovePkt;
+
+	//	{
+	//		message::PosInfo* info = MovePkt.mutable_posinfo();
+	//		info->CopyFrom(*PlayerInfo);
+	//		info->set_yaw(DesiredYaw);
+	//		info->set_state(GetMoveState());
+	//	}
+	//	// TODO : Send Packet should be needed
+	//	// Will Test...
+	//	SEND_PACKET(message::HEADER::PLAYER_MOVE_REQ, MovePkt);
+	//}
 }
 
 // Called to bind functionality to input
 void AJK2PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
-
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);	
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::Move);
-	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AJK2PlayerCharacter::Look);
-
 }
 
 void AJK2PlayerCharacter::Move(const FInputActionValue& Value)
@@ -137,5 +126,45 @@ void AJK2PlayerCharacter::Look(const FInputActionValue& Value)
 
 	AddControllerYawInput(-LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
+}
+
+void AJK2PlayerCharacter::Attack()
+{
+	if ( IsAttacking )
+	{
+		SaveAttacking = true;
+	}
+	else
+	{
+		IsAttacking = true;
+		DoCombo();
+	}
+}
+
+//JJH Assignment
+void AJK2PlayerCharacter::SkillQ(const FInputActionValue& value)
+{
+	UE_LOG(LogTemp, Log, TEXT("This is Parent Class"));
+}
+
+void AJK2PlayerCharacter::ComboActionBegin()
+{
+	if ( SaveAttacking )
+	{
+		SaveAttacking = false;
+		DoCombo();
+	}
+}
+
+void AJK2PlayerCharacter::DoCombo()
+{
+}
+
+void AJK2PlayerCharacter::ComboActionEnd()
+{
+	ensure(CurrentCombo != 0);
+	CurrentCombo = 0;
+	SaveAttacking = false;
+	IsAttacking = false;
 }
 
