@@ -16,7 +16,7 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 	//Pawn
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	
 	//Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
