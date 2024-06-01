@@ -47,6 +47,7 @@ public:
 	int32 CurrentCombo = 0;
 	uint8 IsAttacking : 1;
 	uint8 SaveAttacking : 1;
+	int32 MaxCombo;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
@@ -64,21 +65,6 @@ public:
 		bool bWeaponActive;
 
 	UPROPERTY()
-		TSet<AActor*> WeaponAttackTargets;
-
-
-protected:
-	// Relate Network...
-
-	// 패킷 전송 주기(Pakcet Sending Delay)
-	const float MOVE_PACKET_SEND_DELAY = 0.2f;
-	float MovePacketSendTimer = MOVE_PACKET_SEND_DELAY;
-
-	// Position Cache (이 값으로 이동 여부 판단)
-	FVector2D DesiredInput;
-	FVector DesiredMoveDirection;
-	float DesiredYaw;
-
-	// Dirty Flag Test (이동 상태 검사)
-	FVector2D LastDesiredInput;
+	TSet<AActor*> WeaponAttackTargets;
+	FName path;
 };

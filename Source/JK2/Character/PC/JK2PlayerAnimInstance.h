@@ -57,7 +57,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Blueprint, meta = (AllowPrivateAccess = "true"))
 	bool FullBody;
-
-	
-	
 };

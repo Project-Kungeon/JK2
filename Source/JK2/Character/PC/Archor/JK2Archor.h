@@ -26,6 +26,7 @@ protected:
 	//Attack Funciton
 	virtual void Attack() override;
 
+	void Shoot();
 	//ComboAction
 	virtual void ComboActionBegin() override;
 	virtual void DoCombo() override;
@@ -40,6 +41,7 @@ public:
 	//Skill Function
 	virtual void SkillQ(const FInputActionValue& value) override;
 
+	
 	UFUNCTION()
 	void CheckWeaponTrace();
 };

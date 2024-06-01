@@ -56,11 +56,14 @@ void AJK2PlayerCharacterBase::BeginPlay()
 	// Set size for collision capsule
 	{
 		FVector Location = GetActorLocation();
+		FRotator Rotator = GetActorRotation();
+
 		DestInfo->set_x(Location.X);
 		DestInfo->set_y(Location.Y);
 		DestInfo->set_z(Location.Z);
-		DestInfo->set_yaw(GetControlRotation().Yaw);
-
+		DestInfo->set_yaw(Rotator.Yaw);
+		DestInfo->set_pitch(Rotator.Pitch);
+		DestInfo->set_roll(Rotator.Roll);
 		
 		SetMoveState(message::MOVE_STATE_IDLE);
 	}
@@ -86,7 +89,9 @@ void AJK2PlayerCharacterBase::Tick(float DeltaTime)
 		if ( State == message::MOVE_STATE_RUN )	// 뛰는 중이라면
 		{
 			SetActorRotation(FRotator(0, DestInfo->yaw(), 0));
-			AddMovementInput(GetActorForwardVector());
+			//AddMovementInput(GetActorForwardVector());
+			FVector vec(DestInfo->x(), DestInfo->y(), DestInfo->z());
+			SetActorLocation(vec);
 
 		}
 		else if(State == message::MOVE_STATE_IDLE )
@@ -146,6 +151,14 @@ void AJK2PlayerCharacterBase::SetDestInfo(const message::PosInfo& Info)
 	{
 		assert(PlayerInfo->object_id() == Info.object_id());
 	}
+
+	// 위치 동기화
+	//FVector TargetLocation(Info.x(), Info.y(), Info.z());
+	//FVector MoveDirection = TargetLocation - GetActorLocation();
+	//MoveDirection.Normalize();
+	//GetCharacterMovement()->AddInputVector(MoveDirection);
+
+	// 위치 정보 갱신
 	DestInfo->CopyFrom(Info);
 	SetMoveState(Info.state());
 }

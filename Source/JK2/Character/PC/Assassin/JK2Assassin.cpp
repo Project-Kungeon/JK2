@@ -13,6 +13,7 @@ AJK2Assassin::AJK2Assassin()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> DefaultMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonKallari/Characters/Heroes/Kallari/Skins/Rogue/Meshes/Kallari_Rogue.Kallari_Rogue'"));
 	if (DefaultMesh.Succeeded())
 		Super::GetMesh()->SetSkeletalMesh(DefaultMesh.Object);
+
 }
 
 void AJK2Assassin::BeginPlay()
