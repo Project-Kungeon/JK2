@@ -8,7 +8,8 @@
 
 
 
-AJK2Assassin::AJK2Assassin()
+AJK2Assassin::AJK2Assassin(FObjectInitializer const& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> DefaultMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonKallari/Characters/Heroes/Kallari/Skins/Rogue/Meshes/Kallari_Rogue.Kallari_Rogue'"));
 	if (DefaultMesh.Succeeded())

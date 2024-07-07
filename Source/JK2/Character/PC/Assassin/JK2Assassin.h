@@ -14,7 +14,7 @@ class JK2_API AJK2Assassin : public AJK2PlayerCharacter
 {
 	GENERATED_BODY()
 public:
-	AJK2Assassin();
+	AJK2Assassin(FObjectInitializer const& ObjectInitializer);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

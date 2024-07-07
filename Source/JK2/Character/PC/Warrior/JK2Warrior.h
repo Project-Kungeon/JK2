@@ -4,17 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "../JK2PlayerCharacter.h"
+#include "JK2.h"
 #include "JK2Warrior.generated.h"
 
 /**
  * 
  */
+class AJK2PlayerCharacter;
+
 UCLASS()
 class JK2_API AJK2Warrior : public AJK2PlayerCharacter
 {
 	GENERATED_BODY()
+
 public:
-	AJK2Warrior();
+	AJK2Warrior(FObjectInitializer const& ObjectInitializer);
 protected:
 	virtual void BeginPlay() override;
 

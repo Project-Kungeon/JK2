@@ -10,7 +10,17 @@ public class JK2 : ModuleRules
 		//Add EnhancedInput
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "ThirdParty" });
+
+		PrivateIncludePaths.AddRange(new string[]
+        {
+            "JK2/",
+            "JK2/Character/PC/",
+            "JK2/Character/PC/Warrior/",
+            "JK2/Network/",
+            "JK2/Network/PacketHandler",
+            "JK2/System/"
+        });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

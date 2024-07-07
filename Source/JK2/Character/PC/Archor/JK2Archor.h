@@ -14,7 +14,7 @@ class JK2_API AJK2Archor : public AJK2PlayerCharacter
 {
 	GENERATED_BODY()
 public:
-	AJK2Archor();
+	AJK2Archor(FObjectInitializer const& ObjectInitializer);
 protected:
 	virtual void BeginPlay() override;
 

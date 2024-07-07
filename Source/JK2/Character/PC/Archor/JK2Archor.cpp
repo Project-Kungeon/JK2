@@ -8,7 +8,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpringArmComponent.h"
 
-AJK2Archor::AJK2Archor()
+AJK2Archor::AJK2Archor(FObjectInitializer const& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	//Path of Arrow Actor Blueprint Class
 	//해당 부분 C++ Class 로 전환

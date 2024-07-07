@@ -7,13 +7,14 @@
 
 
 
-AJK2Warrior::AJK2Warrior()
+AJK2Warrior::AJK2Warrior(FObjectInitializer const& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> DefaultMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonGreystone/Characters/Heroes/Greystone/Meshes/Greystone.Greystone'"));
 	if ( nullptr != DefaultMesh.Object )
 	{
 		Super::GetMesh()->SetSkeletalMesh(DefaultMesh.Object);
-	}
+	}	
 }
 
 void AJK2Warrior::BeginPlay()
