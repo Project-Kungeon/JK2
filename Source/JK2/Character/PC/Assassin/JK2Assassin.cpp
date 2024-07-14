@@ -3,6 +3,7 @@
 #include "JK2Assassin.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "JK2/Physics/JK2Collision.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(JK2Assassin)
 
@@ -86,10 +87,34 @@ void AJK2Assassin::CheckWeaponTrace()
 	FVector StartR = GetMesh()->GetSocketLocation(FName(TEXT("sword_base_l")));
 	FVector EndL = GetMesh()->GetSocketLocation(FName(TEXT("sword_tip_r")));
 	FVector EndR = GetMesh()->GetSocketLocation(FName(TEXT("sword_tip_r")));
+	FVector ExtendL = EndL - StartL;
+	FVector ExtendR = EndR - StartR;
+	const float AttackRadius = 20.f;
 
-	TArray<FHitResult> HitResults;
+	//TArray<FHitResult> HitResults;
+	FHitResult HitResult;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 
-	bool bSuccessL = UKismetSystemLibrary::SphereTraceMulti(
+	bool bSuccessL = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		StartL,
+		EndL,
+		FQuat::Identity,
+		CCHANNEL_JK2ACTION,
+		FCollisionShape::MakeCapsule(ExtendL),
+		Params
+	);
+	bool bSuccessR = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		StartR,
+		EndR,
+		FQuat::Identity,
+		CCHANNEL_JK2ACTION,
+		FCollisionShape::MakeCapsule(ExtendR),
+		Params
+	);
+
+	/*bool bSuccessL = UKismetSystemLibrary::SphereTraceMulti(
 		this,
 		StartL,
 		EndL,
@@ -117,26 +142,64 @@ void AJK2Assassin::CheckWeaponTrace()
 		true,
 		FLinearColor::Red,
 		FLinearColor::Green,
-		1.f);
+		1.f);*/
 
 	if ( bSuccessL || bSuccessR )
 	{
 		// FDamageEvent DamageEvent;
 
-		for ( FHitResult& HitResult : HitResults )
-		{
-			AActor* Actor = HitResult.GetActor();
-			if ( Actor == nullptr )
-				continue;
+		//for ( FHitResult& HitResult : HitResults )
+		//{
+		//	AActor* Actor = HitResult.GetActor();
+		//	if ( Actor == nullptr )
+		//		continue;
 
-			if ( WeaponAttackTargets.Contains(Actor) == false )
-			{
-				WeaponAttackTargets.Add(Actor);
+		//	if ( WeaponAttackTargets.Contains(Actor) == false )
+		//	{
+		//		WeaponAttackTargets.Add(Actor);
 
-				// TODO HitDamage
-				UE_LOG(LogTemp, Log, TEXT("HitDamage"));
+		//		// TODO HitDamage
+		//		UE_LOG(LogTemp, Log, TEXT("HitDamage"));
 
-			}
-		}
+		//	}
+		//}
+		AActor* Actor = HitResult.GetActor();
+		UE_LOG(LogTemp, Log, TEXT("HitDamage: %s"), *Actor->GetName());
 	}
+#if ENABLE_DRAW_DEBUG
+	FVector DirectionL = EndL - StartL;
+	FVector DirectionR = EndR - StartR;
+	float CapsuleHalfHeightL = DirectionL.Size() / 2.f;
+	float CapsuleHalfHeightR = DirectionR.Size() / 2.f;
+	FVector CapsuleOriginL = StartL + (EndL - StartL) / 2.f;
+	FVector CapsuleOriginR = StartR + (EndR - StartR) / 2.f;
+	FColor DrawColor = bSuccessL || bSuccessR ? FColor::Green : FColor::Red;
+	FQuat QuatRotationL = FQuat::FindBetweenNormals(FVector::UpVector, DirectionL.GetSafeNormal());
+	FQuat QuatRotationR = FQuat::FindBetweenNormals(FVector::UpVector, DirectionR.GetSafeNormal());
+
+	DrawDebugCapsule(
+		GetWorld(),
+		CapsuleOriginL,
+		CapsuleHalfHeightL,
+		AttackRadius,
+		QuatRotationL,
+		DrawColor,
+		false,
+		1.f,
+		0
+	);
+
+	DrawDebugCapsule(
+		GetWorld(),
+		CapsuleOriginR,
+		CapsuleHalfHeightR,
+		AttackRadius,
+		QuatRotationR,
+		DrawColor,
+		false,
+		1.f,
+		0
+	);
+
+#endif
 }

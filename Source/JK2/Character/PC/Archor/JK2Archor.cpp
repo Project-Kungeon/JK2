@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "JK2/Physics/JK2Collision.h"
 
 AJK2Archor::AJK2Archor()
 {
@@ -60,12 +61,10 @@ void AJK2Archor::Shoot()
 	FVector CrosshairWorldLocation;
 	FVector EndLocation;
 	FVector ImpactPoint;
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	//TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	TEnumAsByte<EObjectTypeQuery> WorldStatic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic);
 	TEnumAsByte<EObjectTypeQuery> WorldDynamic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic);
-	ObjectTypes.Add(WorldStatic);
-	ObjectTypes.Add(WorldDynamic);
-
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 
 	//Camera Info 가져오기.
 	if ( GetWorld() )
@@ -85,11 +84,19 @@ void AJK2Archor::Shoot()
 		}
 	}
 	
-	bool IsSuccess = UKismetSystemLibrary::LineTraceSingleForObjects(
+	bool bSuccess = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		CrosshairWorldLocation,
+		ImpactPoint,
+		CCHANNEL_JK2ACTION,
+		Params
+	);
+
+	/*bool bSuccess2 = UKismetSystemLibrary::LineTraceSingle(
 		this,
 		CrosshairWorldLocation,
 		ImpactPoint,
-		ObjectTypes,
+		ETraceTypeQuery::TraceTypeQuery1,
 		false,
 		TArray <AActor*>(),
 		EDrawDebugTrace::ForDuration,
@@ -97,22 +104,42 @@ void AJK2Archor::Shoot()
 		true,
 		FLinearColor::Red,
 		FLinearColor::Green,
-		1.f);
-	if ( IsSuccess )
+		1.f);*/
+
+	if ( bSuccess )
 	{
 		if ( HitResult.bBlockingHit )
 		{
 			ImpactPoint = HitResult.ImpactPoint;
 			UE_LOG(LogTemp, Log, TEXT("%d, %d, %d"), ImpactPoint.X, ImpactPoint.Y, ImpactPoint.Z);
 		}
-		ArrowSpawnLocation = ShootPoint;
-		ArrowSpawnRotation = (ImpactPoint - ArrowSpawnLocation).Rotation();
+		/*ArrowSpawnLocation = ShootPoint;
+		ArrowSpawnRotation = (ImpactPoint - ArrowSpawnLocation).Rotation();*/
+		ArrowSpawnRotation = (ImpactPoint - CrosshairWorldLocation).Rotation();
 	}
-	//rotator = GetControlRotation();
-	//ShootPoint = GetMesh()->GetSocketLocation(FName(TEXT("arrow_anchor")));
+	
 	//화살 생성
 	UE_LOG(LogTemp, Log, TEXT("%d %d %d"), )
-	GetWorld()->SpawnActor<AActor>(ObjectToSpawn->GeneratedClass, ArrowSpawnLocation, ArrowSpawnRotation, SpawnParams);
+	//GetWorld()->SpawnActor<AActor>(ObjectToSpawn->GeneratedClass, ArrowSpawnLocation, ArrowSpawnRotation, SpawnParams);
+	GetWorld()->SpawnActor<AActor>(ObjectToSpawn->GeneratedClass, CrosshairWorldLocation, ArrowSpawnRotation, SpawnParams);
+
+#if ENABLE_DRAW_DEBUG
+	FVector Direction = ImpactPoint - CrosshairWorldLocation;
+	FColor DrawColor = bSuccess ? FColor::Green : FColor::Red;
+	FQuat QuatRotation = FQuat::FindBetweenNormals(FVector::UpVector, Direction.GetSafeNormal());
+
+	DrawDebugLine(
+		GetWorld(),
+		CrosshairWorldLocation,
+		ImpactPoint,
+		DrawColor,
+		false,
+		3.f,
+		0,
+		3.f
+	);
+
+#endif
 }
 
 void AJK2Archor::ComboActionBegin()

@@ -4,6 +4,8 @@
 #include "JK2Warrior.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "JK2/Physics/JK2Collision.h"
+
 
 
 
@@ -26,7 +28,7 @@ void AJK2Warrior::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if ( bWeaponActive )
 		CheckWeaponTrace();
-}
+} 
 
 void AJK2Warrior::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -39,6 +41,22 @@ void AJK2Warrior::SkillQ(const FInputActionValue& value)
 	UE_LOG(LogTemp, Log, TEXT("This is %s"), *this->GetName());
 }
 
+void AJK2Warrior::SkillE(const FInputActionValue& value)
+{
+	Super::SkillE(value);
+}
+
+void AJK2Warrior::SkillR(const FInputActionValue& value)
+{
+	Super::SkillR(value);
+
+}
+
+void AJK2Warrior::SkillLShift(const FInputActionValue& value)
+{
+	Super::SkillLShift(value);
+}
+
 void AJK2Warrior::CheckWeaponTrace()
 {
 	if ( !bWeaponActive )
@@ -46,11 +64,24 @@ void AJK2Warrior::CheckWeaponTrace()
 
 	FVector Start = GetMesh()->GetSocketLocation(FName(TEXT("FX_Sword_Bottom")));
 	FVector End = GetMesh()->GetSocketLocation(FName(TEXT("FX_Sword_Top")));
-
+	FVector Extend = End - Start;
+	const float AttackRadius = 20.f;
 
 	TArray<FHitResult> HitResults;
+	//FHitResult HitResult;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
+	
+	bool bSuccess = GetWorld()->SweepMultiByChannel(
+		HitResults,
+		Start,
+		End,
+		FQuat::Identity,
+		CCHANNEL_JK2ACTION,
+		FCollisionShape::MakeCapsule(Extend),
+		Params
+	);
 
-	bool bSuccess = UKismetSystemLibrary::SphereTraceMulti(
+	/*bool bSuccess = UKismetSystemLibrary::SphereTraceMulti(
 		this,
 		Start,
 		End,
@@ -63,11 +94,11 @@ void AJK2Warrior::CheckWeaponTrace()
 		true,
 		FLinearColor::Red,
 		FLinearColor::Green,
-		1.f);
+		1.f);*/
 
 	if ( bSuccess )
 	{
-		// FDamageEvent DamageEvent;
+		//FDamageEvent DamageEvent;
 
 		for ( FHitResult& HitResult : HitResults )
 		{
@@ -80,11 +111,35 @@ void AJK2Warrior::CheckWeaponTrace()
 				WeaponAttackTargets.Add(Actor);
 
 				// TODO HitDamage
+				// Server Code need
 				UE_LOG(LogTemp, Log, TEXT("HitDamage: %s"), *Actor->GetName());
+
 
 			}
 		}
+		
 	}
+
+#if ENABLE_DRAW_DEBUG
+	FVector Direction = End - Start;
+	float CapsuleHalfHeight = Direction.Size() / 2.f;
+	FVector CapsuleOrigin = Start + (End - Start) / 2.f;
+	FColor DrawColor = bSuccess ? FColor::Green : FColor::Red;
+	FQuat QuatRotation = FQuat::FindBetweenNormals(FVector::UpVector, Direction.GetSafeNormal());
+
+	DrawDebugCapsule(
+		GetWorld(),
+		CapsuleOrigin,
+		CapsuleHalfHeight,
+		AttackRadius,
+		QuatRotation,
+		DrawColor,
+		false,
+		1.f,
+		0
+	);
+	
+#endif
 }
 
 void AJK2Warrior::Attack()

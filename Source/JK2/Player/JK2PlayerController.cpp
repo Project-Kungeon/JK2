@@ -41,6 +41,21 @@ AJK2PlayerController::AJK2PlayerController()
 	{
 		QAction = InputActionSkillQRef.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionSkillERef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Skill_E.IA_Skill_E'"));
+	if ( nullptr != InputActionSkillERef.Object )
+	{
+		EAction = InputActionSkillERef.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionSkillRRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Skill_R.IA_Skill_R'"));
+	if ( nullptr != InputActionSkillRRef.Object )
+	{
+		RAction = InputActionSkillRRef.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionSkillLShiftRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Action/IA_Skill_LShift.IA_Skill_LShift'"));
+	if ( nullptr != InputActionSkillLShiftRef.Object )
+	{
+		LShiftAction = InputActionSkillLShiftRef.Object;
+	}
 }
 
 void AJK2PlayerController::BeginPlay()
@@ -70,6 +85,9 @@ void AJK2PlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AJK2PlayerController::LookAct);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AJK2PlayerController::AttackAct);
 		EnhancedInputComponent->BindAction(QAction, ETriggerEvent::Triggered, this, &AJK2PlayerController::SkillQAct);
+		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Triggered, this, &AJK2PlayerController::SkillEAct);
+		EnhancedInputComponent->BindAction(RAction, ETriggerEvent::Triggered, this, &AJK2PlayerController::SkillRAct);
+		EnhancedInputComponent->BindAction(LShiftAction, ETriggerEvent::Triggered, this, &AJK2PlayerController::SkillLShiftAct);
 	}
 }
 
@@ -125,5 +143,32 @@ void AJK2PlayerController::SkillQAct(const FInputActionValue& Value)
 	if ( ControlledCharacter )
 	{
 		ControlledCharacter->SkillQ(Value);
+	}
+}
+
+void AJK2PlayerController::SkillEAct(const FInputActionValue& Value)
+{
+	AJK2PlayerCharacter* ControlledCharacter = Cast<AJK2PlayerCharacter>(GetPawn());
+	if ( ControlledCharacter )
+	{
+		ControlledCharacter->SkillE(Value);
+	}
+}
+
+void AJK2PlayerController::SkillRAct(const FInputActionValue& Value)
+{
+	AJK2PlayerCharacter* ControlledCharacter = Cast<AJK2PlayerCharacter>(GetPawn());
+	if ( ControlledCharacter )
+	{
+		ControlledCharacter->SkillR(Value);
+	}
+}
+
+void AJK2PlayerController::SkillLShiftAct(const FInputActionValue& Value)
+{
+	AJK2PlayerCharacter* ControlledCharacter = Cast<AJK2PlayerCharacter>(GetPawn());
+	if ( ControlledCharacter )
+	{
+		ControlledCharacter->SkillLShift(Value);
 	}
 }

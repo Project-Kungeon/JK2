@@ -73,7 +73,8 @@ void AArrow::OnComponentOverlapBegin(UPrimitiveComponent* OverlappedComponent, A
 		ProjectileMovement->StopMovementImmediately();
 		ProjectileMovement->ProjectileGravityScale = 0.f;
 
-		this->AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
+		FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepWorld, true);
+		this->AttachToActor(OtherActor, AttachmentRules);
 		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Box->GetComponentLocation());
 

@@ -46,11 +46,26 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> QAction;
 
+	//SkillEAction
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> EAction;
+
+	//SkillRAction
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> RAction;
+
+	//SkillLShiftAction
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> LShiftAction;
+
 	void JumpAct();
 	void StopJumpingAct();
 	void LookAct(const FInputActionValue& Value);
 	void MoveAct(const FInputActionValue& Value);
 	void AttackAct();
 	void SkillQAct(const FInputActionValue& Value);
+	void SkillEAct(const FInputActionValue& Value);
+	void SkillRAct(const FInputActionValue& Value);
+	void SkillLShiftAct(const FInputActionValue& Value);
 	
 };

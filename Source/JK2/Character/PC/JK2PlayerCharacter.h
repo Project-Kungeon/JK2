@@ -35,6 +35,9 @@ public:
 	virtual void Attack();
 	//Skill Function
 	virtual void SkillQ(const FInputActionValue& Value);
+	virtual void SkillE(const FInputActionValue& Value);
+	virtual void SkillR(const FInputActionValue& Value);
+	virtual void SkillLShift(const FInputActionValue& Value);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ComboActionBegin();
@@ -48,7 +51,6 @@ public:
 	uint8 IsAttacking : 1;
 	uint8 SaveAttacking : 1;
 	int32 MaxCombo;
-
 protected:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	TObjectPtr<class USpringArmComponent> CameraBoom;

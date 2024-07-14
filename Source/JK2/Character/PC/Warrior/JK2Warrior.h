@@ -44,6 +44,11 @@ public:
 
 	//Skill Function
 	virtual void SkillQ(const FInputActionValue& value) override;
+	virtual void SkillE(const FInputActionValue& value) override;
+	virtual void SkillR(const FInputActionValue& value) override;
+	virtual void SkillLShift(const FInputActionValue& value) override;
+
+	
 public:
 	//refactoring
 	UFUNCTION()

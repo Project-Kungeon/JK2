@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Animation/AnimMontage.h"
+#include "JK2/Physics/JK2Collision.h"
 
 // Sets default values
 AJK2PlayerCharacter::AJK2PlayerCharacter()
@@ -16,8 +17,11 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 	//Pawn
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
-	bUseControllerRotationYaw = true;
+	bUseControllerRotationYaw = false;
 	
+	//Capsule (프로파일 설정)
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_JK2CAPSULE);
+
 	//Movement
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f,500.0f, 0.0f);
@@ -46,7 +50,7 @@ AJK2PlayerCharacter::AJK2PlayerCharacter()
 	//Mesh
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f,0.0f,-88.0f),FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
+	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 
 	IsAttacking = false;
 	SaveAttacking = false;
@@ -75,13 +79,17 @@ void AJK2PlayerCharacter::Move(const FInputActionValue& Value)
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	
 	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FRotator CameraRotation = FollowCamera->GetComponentRotation();
 
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FRotator CameraYawRotation(0, CameraRotation.Yaw, 0);
+
+	const FVector ForwardDirection = FRotationMatrix(CameraYawRotation).GetUnitAxis(EAxis::X);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 	AddMovementInput(ForwardDirection, MovementVector.X);
 	AddMovementInput(RightDirection, MovementVector.Y);
+	
 }
 
 void AJK2PlayerCharacter::Look(const FInputActionValue& Value)
@@ -108,7 +116,22 @@ void AJK2PlayerCharacter::Attack()
 //JJH Assignment
 void AJK2PlayerCharacter::SkillQ(const FInputActionValue& value)
 {
-	UE_LOG(LogTemp, Log, TEXT("This is Parent Class"));
+	UE_LOG(LogTemp, Log, TEXT("This is Parent Class SKillQ"));
+}
+
+void AJK2PlayerCharacter::SkillE(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("This is Parent Class SKillE"));
+}
+
+void AJK2PlayerCharacter::SkillR(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("This is Parent Class SKillR"));
+}
+
+void AJK2PlayerCharacter::SkillLShift(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("This is Parent Class SKillLShift"));
 }
 
 void AJK2PlayerCharacter::ComboActionBegin()
