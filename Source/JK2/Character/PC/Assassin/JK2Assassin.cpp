@@ -91,12 +91,12 @@ void AJK2Assassin::CheckWeaponTrace()
 	FVector ExtendR = EndR - StartR;
 	const float AttackRadius = 20.f;
 
-	//TArray<FHitResult> HitResults;
-	FHitResult HitResult;
+	TArray<FHitResult> HitResults;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 
-	bool bSuccessL = GetWorld()->SweepSingleByChannel(
-		HitResult,
+
+	bool bSuccessL = GetWorld()->SweepMultiByChannel(
+		HitResults,
 		StartL,
 		EndL,
 		FQuat::Identity,
@@ -104,8 +104,9 @@ void AJK2Assassin::CheckWeaponTrace()
 		FCollisionShape::MakeCapsule(ExtendL),
 		Params
 	);
-	bool bSuccessR = GetWorld()->SweepSingleByChannel(
-		HitResult,
+	
+	bool bSuccessR = GetWorld()->SweepMultiByChannel(
+		HitResults,
 		StartR,
 		EndR,
 		FQuat::Identity,
@@ -114,57 +115,25 @@ void AJK2Assassin::CheckWeaponTrace()
 		Params
 	);
 
-	/*bool bSuccessL = UKismetSystemLibrary::SphereTraceMulti(
-		this,
-		StartL,
-		EndL,
-		12.f,
-		ETraceTypeQuery::TraceTypeQuery3,
-		false,
-		TArray <AActor*>(),
-		EDrawDebugTrace::ForDuration,
-		OUT HitResults,
-		true,
-		FLinearColor::Red,
-		FLinearColor::Green,
-		1.f);
-
-	bool bSuccessR = UKismetSystemLibrary::SphereTraceMulti(
-		this,
-		StartR,
-		EndR,
-		12.f,
-		ETraceTypeQuery::TraceTypeQuery3,
-		false,
-		TArray <AActor*>(),
-		EDrawDebugTrace::ForDuration,
-		OUT HitResults,
-		true,
-		FLinearColor::Red,
-		FLinearColor::Green,
-		1.f);*/
-
 	if ( bSuccessL || bSuccessR )
 	{
 		// FDamageEvent DamageEvent;
 
-		//for ( FHitResult& HitResult : HitResults )
-		//{
-		//	AActor* Actor = HitResult.GetActor();
-		//	if ( Actor == nullptr )
-		//		continue;
+		for ( FHitResult& HitResult : HitResults )
+		{
+			AActor* Actor = HitResult.GetActor();
+			if ( Actor == nullptr )
+				continue;
 
-		//	if ( WeaponAttackTargets.Contains(Actor) == false )
-		//	{
-		//		WeaponAttackTargets.Add(Actor);
+			if ( WeaponAttackTargets.Contains(Actor) == false )
+			{
+				WeaponAttackTargets.Add(Actor);
 
-		//		// TODO HitDamage
-		//		UE_LOG(LogTemp, Log, TEXT("HitDamage"));
+				// TODO HitDamage
+				UE_LOG(LogTemp, Log, TEXT("HitDamage: %s"), *Actor->GetName());
 
-		//	}
-		//}
-		AActor* Actor = HitResult.GetActor();
-		UE_LOG(LogTemp, Log, TEXT("HitDamage: %s"), *Actor->GetName());
+			}
+		}		
 	}
 #if ENABLE_DRAW_DEBUG
 	FVector DirectionL = EndL - StartL;

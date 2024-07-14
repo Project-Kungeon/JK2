@@ -92,20 +92,6 @@ void AJK2Archor::Shoot()
 		Params
 	);
 
-	/*bool bSuccess2 = UKismetSystemLibrary::LineTraceSingle(
-		this,
-		CrosshairWorldLocation,
-		ImpactPoint,
-		ETraceTypeQuery::TraceTypeQuery1,
-		false,
-		TArray <AActor*>(),
-		EDrawDebugTrace::ForDuration,
-		OUT HitResult,
-		true,
-		FLinearColor::Red,
-		FLinearColor::Green,
-		1.f);*/
-
 	if ( bSuccess )
 	{
 		if ( HitResult.bBlockingHit )

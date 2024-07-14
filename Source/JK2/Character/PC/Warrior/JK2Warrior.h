@@ -25,6 +25,14 @@ protected:
 	TObjectPtr<class UAnimMontage> ComboActionMontage2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	TObjectPtr<class UAnimMontage> ComboActionMontage3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<class UAnimMontage> SkillRMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<class UParticleSystem> SkillREffect;
+	
+
+	UPROPERTY()
+	UParticleSystemComponent* ParticleSystemComponent;
 
 	//Attack Funciton
 	virtual void Attack() override;
@@ -48,9 +56,13 @@ public:
 	virtual void SkillR(const FInputActionValue& value) override;
 	virtual void SkillLShift(const FInputActionValue& value) override;
 
-	
 public:
 	//refactoring
 	UFUNCTION()
 	void CheckWeaponTrace();
+	void PlayParticleSystem();
+	void CheckSkillRTrace();
+	void StopParticleSystem();
+protected:
+
 };

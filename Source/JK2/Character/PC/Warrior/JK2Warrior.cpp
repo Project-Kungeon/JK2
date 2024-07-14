@@ -4,9 +4,10 @@
 #include "JK2Warrior.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "JK2/Physics/JK2Collision.h"
-
-
+#include "TimerManager.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 AJK2Warrior::AJK2Warrior()
@@ -28,13 +29,14 @@ void AJK2Warrior::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if ( bWeaponActive )
 		CheckWeaponTrace();
+	
 } 
 
 void AJK2Warrior::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-//JJH Assignment
+
 void AJK2Warrior::SkillQ(const FInputActionValue& value)
 {
 	Super::SkillQ(value);
@@ -49,6 +51,9 @@ void AJK2Warrior::SkillE(const FInputActionValue& value)
 void AJK2Warrior::SkillR(const FInputActionValue& value)
 {
 	Super::SkillR(value);
+	PlayAnimMontage(SkillRMontage, 1.4f);
+	PlayParticleSystem();
+	CheckSkillRTrace();
 
 }
 
@@ -71,6 +76,8 @@ void AJK2Warrior::CheckWeaponTrace()
 	//FHitResult HitResult;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 	
+	/*  sweep / multi / ByChannel */
+
 	bool bSuccess = GetWorld()->SweepMultiByChannel(
 		HitResults,
 		Start,
@@ -80,21 +87,6 @@ void AJK2Warrior::CheckWeaponTrace()
 		FCollisionShape::MakeCapsule(Extend),
 		Params
 	);
-
-	/*bool bSuccess = UKismetSystemLibrary::SphereTraceMulti(
-		this,
-		Start,
-		End,
-		12.f,
-		ETraceTypeQuery::TraceTypeQuery3,
-		false,
-		TArray <AActor*>(),
-		EDrawDebugTrace::ForDuration,
-		OUT HitResults,
-		true,
-		FLinearColor::Red,
-		FLinearColor::Green,
-		1.f);*/
 
 	if ( bSuccess )
 	{
@@ -140,6 +132,87 @@ void AJK2Warrior::CheckWeaponTrace()
 	);
 	
 #endif
+}
+
+void AJK2Warrior::PlayParticleSystem()
+{
+	FTimerHandle TimerHandle;
+	//timer
+	const float Duration = 5.f;
+
+	ParticleSystemComponent = UGameplayStatics::SpawnEmitterAttached(
+		SkillREffect,
+		GetMesh(),
+		TEXT("NONE"),
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		EAttachLocation::KeepRelativeOffset,
+		false
+	);
+
+	if ( ParticleSystemComponent )
+	{
+		// 파티클 시스템 재생
+		ParticleSystemComponent->Activate(true);
+
+		// 일정 시간 후에 파티클 시스템 제거를 위한 타이머 설정
+		GetWorldTimerManager().SetTimer(
+			TimerHandle,
+			this,
+			&AJK2Warrior::StopParticleSystem,
+			Duration,
+			false
+		);
+	}
+}
+
+void AJK2Warrior::CheckSkillRTrace()
+{
+	TArray<FOverlapResult> HitResults;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
+
+	bool bSuccess = GetWorld()->OverlapMultiByChannel(
+		HitResults,
+		GetActorLocation(),
+		FQuat::Identity,
+		CCHANNEL_JK2ACTION,
+		FCollisionShape::MakeSphere(400.0f),
+		Params
+	);
+
+	if ( bSuccess )
+	{
+		for ( const FOverlapResult& HitResult : HitResults )
+		{
+			AActor* OverlappingActor = HitResult.GetActor();
+			//Take Damage
+			
+			FVector OverlapLocation = OverlappingActor->GetActorLocation();
+			float SphereRadius = 50.0f; 
+			FColor SphereColor = FColor::Green;
+			float LifeTime = 5.0f;
+			
+			DrawDebugSphere(
+				GetWorld(),
+				OverlapLocation,
+				SphereRadius,
+				32,
+				SphereColor,
+				false,
+				LifeTime
+			);
+		}
+	}
+	
+}
+
+void AJK2Warrior::StopParticleSystem()
+{
+	if ( ParticleSystemComponent )
+	{
+		ParticleSystemComponent->Deactivate();
+		ParticleSystemComponent->DestroyComponent();
+	}
 }
 
 void AJK2Warrior::Attack()
